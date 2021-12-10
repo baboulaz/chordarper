@@ -7,6 +7,14 @@ This audio plugin integrates in major DAWs and is a MIDI scales, chords generato
 
 ## Installation / Binaries
 
+Download the plugin and place it in your corresponding plugin directory.
+[chordarper lv2 linux]()
+[chordarper lv2 linux]()
+[chordarper vst3 linux]()
+[chordarper vst3 windows]()
+[chordarper vst3 macos]()
+
+
 ## Screenshots
 
 ## Documentation
