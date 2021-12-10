@@ -1,4 +1,4 @@
-# Chordarper plugin (lv2 / vst3)
+# ChordArper plugin (lv2 / vst3)
 A scales, chords and arpeggiator plugin
 
 ## Description
@@ -9,15 +9,15 @@ This audio plugin integrates in major DAWs and is a MIDI scales, chords generato
 
 Download the plugin and place it in your corresponding plugin directory.
 
-[chordarper lv2 linux]()
+[ChordArper lv2 linux]()
 
-[chordarper lv2 linux]()
+[ChordArper lv2 linux]()
 
-[chordarper vst3 linux]()
+[ChordArper vst3 linux]()
 
-[chordarper vst3 windows]()
+[ChordArper vst3 windows]()
 
-[chordarper vst3 macos]()
+[ChordArper vst3 macos]()
 
 
 ## Screenshots
