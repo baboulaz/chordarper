@@ -1,9 +1,16 @@
 # Chordarper plugin (lv2 / vst3)
-A chords scales and arpeggiator plugin
+A scales, chords and arpeggiator plugin
 
 ## Description
 
-## Binaries
+This audio plugin integrates in major DAWs and is a MIDI scales, chords generator, and an arpegiator plugin.
 
-## Dev
+## Installation / Binaries
 
+## Screenshots
+
+## Documentation
+
+## Development
+
+This plugin uses the JUCE framework
