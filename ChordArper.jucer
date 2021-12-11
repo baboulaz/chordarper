@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="FhAK4y" name="ChordArper" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" displaySplashScreen="1"
+              pluginCharacteristicsValue="pluginIsMidiEffectPlugin" pluginManufacturer="schieberlein"
+              companyName="schieberlein" version="1.0.0" projectLineFeed="&#10;"
+              pluginName="ChordArper" pluginDesc="A Scales, chords and arpeggiator plugin">
   <MAINGROUP id="BapKpM" name="ChordArper">
     <GROUP id="{1E78D18B-591E-3631-C411-6BFEA7D996B5}" name="Source">
+      <FILE id="JWriC5" name="GridItemPanel.cpp" compile="1" resource="0"
+            file="Source/GridItemPanel.cpp"/>
+      <FILE id="v9D03L" name="GridItemPanel.h" compile="0" resource="0" file="Source/GridItemPanel.h"/>
       <FILE id="UyfITJ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="MUo55q" name="PluginProcessor.h" compile="0" resource="0"
@@ -21,18 +27,18 @@
         <CONFIGURATION isDebug="0" name="Release" targetName="ChordArper"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_audio_basics" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_core" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../../Downloads/juce-6.1.2-linux/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_core" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_events" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/usr/share/juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="/usr/share/juce/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
   </EXPORTFORMATS>
@@ -51,4 +57,7 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
+  <LIVE_SETTINGS>
+    <LINUX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

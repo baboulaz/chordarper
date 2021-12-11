@@ -9,32 +9,55 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+juce::OwnedArray<GridItemPanel> items;
+
 //==============================================================================
-ChordArperAudioProcessorEditor::ChordArperAudioProcessorEditor (ChordArperAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+ChordArperAudioProcessorEditor::ChordArperAudioProcessorEditor(ChordArperAudioProcessor &p)
+    : AudioProcessorEditor(&p), audioProcessor(p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+  // Make sure that before the constructor has finished, you've set the
+  // editor's size to whatever you need it to be.
+  addAndMakeVisible(items.add(new GridItemPanel(juce::Colours::aquamarine, "0")));
+  addAndMakeVisible(items.add(new GridItemPanel(juce::Colours::red, "1")));
+  addAndMakeVisible(items.add(new GridItemPanel(juce::Colours::blue, "2")));
+  
+  setSize(800, 600);
 }
 
 ChordArperAudioProcessorEditor::~ChordArperAudioProcessorEditor()
 {
 }
 
-//==============================================================================
-void ChordArperAudioProcessorEditor::paint (juce::Graphics& g)
-{
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+//==============================================================================
+void ChordArperAudioProcessorEditor::paint(juce::Graphics &g)
+{
+  g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
 void ChordArperAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+  juce::Grid grid;
+
+  grid.rowGap = juce::Grid::Px(20);
+  grid.columnGap = juce::Grid::Px(20);
+
+  using Track = juce::Grid::TrackInfo;
+
+  grid.templateRows = {Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1))};
+
+  grid.templateColumns = {Track(juce::Grid::Fr(1)),
+                          Track(juce::Grid::Fr(1))};
+
+  grid.autoColumns = Track(juce::Grid::Fr(1));
+  grid.autoRows = Track(juce::Grid::Fr(1));
+
+  grid.autoFlow = juce::Grid::AutoFlow::column;
+
+  grid.items.addArray({juce::GridItem(items[0]),
+                       juce::GridItem(items[1]),
+                       juce::GridItem(items[2]).withArea(1, 0, 1, 1)});
+
+  grid.performLayout(getLocalBounds());
 }
+
