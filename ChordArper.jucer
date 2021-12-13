@@ -7,6 +7,14 @@
               pluginName="ChordArper" pluginDesc="A Scales, chords and arpeggiator plugin">
   <MAINGROUP id="BapKpM" name="ChordArper">
     <GROUP id="{1E78D18B-591E-3631-C411-6BFEA7D996B5}" name="Source">
+      <FILE id="R76oCH" name="ArpeggiatorPanel.cpp" compile="1" resource="0"
+            file="Source/ArpeggiatorPanel.cpp"/>
+      <FILE id="EChh5b" name="ArpeggiatorPanel.h" compile="0" resource="0"
+            file="Source/ArpeggiatorPanel.h"/>
+      <FILE id="WtyOiU" name="ChordPanel.cpp" compile="1" resource="0" file="Source/ChordPanel.cpp"/>
+      <FILE id="oLAQT4" name="ChordPanel.h" compile="0" resource="0" file="Source/ChordPanel.h"/>
+      <FILE id="Nv5Xmo" name="ScalePanel.cpp" compile="1" resource="0" file="Source/ScalePanel.cpp"/>
+      <FILE id="ClQ9xT" name="ScalePanel.h" compile="0" resource="0" file="Source/ScalePanel.h"/>
       <FILE id="JWriC5" name="GridItemPanel.cpp" compile="1" resource="0"
             file="Source/GridItemPanel.cpp"/>
       <FILE id="v9D03L" name="GridItemPanel.h" compile="0" resource="0" file="Source/GridItemPanel.h"/>

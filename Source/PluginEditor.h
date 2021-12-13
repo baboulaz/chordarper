@@ -10,7 +10,9 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "GridItemPanel.h"
+#include "ScalePanel.h"
+#include "ChordPanel.h"
+#include "ArpeggiatorPanel.h"
 
 //==============================================================================
 /**
