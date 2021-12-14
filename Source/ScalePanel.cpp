@@ -12,8 +12,11 @@
 #include "ScalePanel.h"
 
 //==============================================================================
-ScalePanel::ScalePanel()
+ScalePanel::ScalePanel() : keyboard(keyboardState, juce::MidiKeyboardComponent::Orientation::horizontalKeyboard)
 {
+  keyboard.setAvailableRange(60,71);
+  addAndMakeVisible(keyboard);
+
   rootNoteCombo.addItem("A", 1);
   rootNoteCombo.addItem("A#", 2);
   rootNoteCombo.addItem("B", 3);
@@ -77,6 +80,7 @@ void ScalePanel::resized()
   rootNoteCombo.setBounds(10, 50, 200, 20);
   modeCombo.setBounds(10, 80, 200, 20);
   filterNote.setBounds(10, 110, 200, 20);
+  keyboard.setBounds(10, 140, 200, 120);
   // This method is where you should set the bounds of any child
   // components that your component contains..
 }

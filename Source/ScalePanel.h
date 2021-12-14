@@ -28,6 +28,8 @@ private:
   juce::ComboBox rootNoteCombo;
   juce::ComboBox modeCombo;
   juce::ToggleButton filterNote;
+  juce::MidiKeyboardState keyboardState;
+  juce::MidiKeyboardComponent keyboard;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScalePanel)
 };

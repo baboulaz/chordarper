@@ -2,9 +2,10 @@
 
 <JUCERPROJECT id="FhAK4y" name="ChordArper" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" displaySplashScreen="1"
-              pluginCharacteristicsValue="pluginIsMidiEffectPlugin" pluginManufacturer="schieberlein"
-              companyName="schieberlein" version="1.0.0" projectLineFeed="&#10;"
-              pluginName="ChordArper" pluginDesc="A Scales, chords and arpeggiator plugin">
+              pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginProducesMidiOut,pluginWantsMidiIn"
+              pluginManufacturer="schieberlein" companyName="schieberlein"
+              version="1.0.0" projectLineFeed="&#10;" pluginName="ChordArper"
+              pluginDesc="A Scales, chords and arpeggiator plugin" pluginVST3Category="Fx,Tools">
   <MAINGROUP id="BapKpM" name="ChordArper">
     <GROUP id="{1E78D18B-591E-3631-C411-6BFEA7D996B5}" name="Source">
       <FILE id="R76oCH" name="ArpeggiatorPanel.cpp" compile="1" resource="0"
