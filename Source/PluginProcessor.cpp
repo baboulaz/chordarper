@@ -5,9 +5,11 @@
 
   ==============================================================================
 */
-
+#include <iostream>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+
+using namespace std;
 
 //==============================================================================
 ChordArperAudioProcessor::ChordArperAudioProcessor()
@@ -46,8 +48,7 @@ double ChordArperAudioProcessor::getTailLengthSeconds() const
 
 int ChordArperAudioProcessor::getNumPrograms()
 {
-    return 1; // NB: some hosts don't cope very well if you tell them there are 0 programs,
-              // so this should be at least 1, even if you're not really implementing programs.
+    return 1;
 }
 
 int ChordArperAudioProcessor::getCurrentProgram()
@@ -57,22 +58,24 @@ int ChordArperAudioProcessor::getCurrentProgram()
 
 void ChordArperAudioProcessor::setCurrentProgram(int index)
 {
+    juce::ignoreUnused(index);
 }
 
 const juce::String ChordArperAudioProcessor::getProgramName(int index)
 {
+    juce::ignoreUnused(index);
     return {};
 }
 
 void ChordArperAudioProcessor::changeProgramName(int index, const juce::String &newName)
 {
+    juce::ignoreUnused(index, newName);
 }
 
 //==============================================================================
 void ChordArperAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    juce::ignoreUnused(samplesPerBlock, sampleRate);
 }
 
 void ChordArperAudioProcessor::releaseResources()
@@ -94,51 +97,69 @@ void ChordArperAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, ju
     auto chainSettings = getChainSettings();
 
     scalesAndChords(midiMessages, chainSettings);
-    arpeggiator(midiMessages, chainSettings);
+    
+    // arpeggiator(midiMessages, chainSettings);
 }
 
 void ChordArperAudioProcessor::scalesAndChords(juce::MidiBuffer &midiMessages, ChainSettings chainSettings)
 {
     juce::MidiBuffer processedMidi;
 
-    if (chainSettings.enableChords)
+    for (const juce::MidiMessageMetadata metadata : midiMessages)
     {
+        auto message = metadata.getMessage();
+        const auto time = metadata.samplePosition;
 
-        for (const auto metadata : midiMessages)
+        if (message.isNoteOnOrOff())
         {
-            auto message = metadata.getMessage();
-            const auto time = metadata.samplePosition;
-
             int note = message.getNoteNumber();
 
-            Scale scale(chainSettings.rootNote, chainSettings.mode);
+            Scale scale = Scale(chainSettings.rootNote, chainSettings.mode);
             int noteFiltered = scale.getNoteOnScale(note, chainSettings.filterNotes);
             if (noteFiltered != -1)
             {
-                Chord chord;
                 if (chainSettings.enableChords)
                 {
-                    chord = scale.getChord(noteFiltered, chainSettings.chordsNotesNumber, chainSettings.chordsInversion, chainSettings.chordsOctaveUp, chainSettings.chordsOctaveDown);
+                    Chord chord = scale.getChord(noteFiltered, chainSettings.chordsNotesNumber, chainSettings.chordsInversion, chainSettings.chordsOctaveUp, chainSettings.chordsOctaveDown);
+
+                    std::set<int> &listNotes = chord.getListOfNotes();
+                    if (listNotes.size() > 0)
+                    {
+                        for (auto it = listNotes.begin(); it != listNotes.end(); it++)
+                        {
+                            int currentNote = *it;
+                            if (message.isNoteOn())
+                            {
+                                processedMidi.addEvent(juce::MidiMessage::noteOn(message.getChannel(), currentNote, message.getVelocity()), time);
+                            }
+                            else if (message.isNoteOff())
+                            {
+                                processedMidi.addEvent(juce::MidiMessage::noteOff(message.getChannel(), currentNote, message.getVelocity()), time);
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    chord = Chord(noteFiltered);
-                }
-                for (std::set<int>::iterator it = chord.getListOfNotes().begin(); it != chord.getListOfNotes().end(); it++)
-                {
-                    int currentNote = *it;
                     if (message.isNoteOn())
                     {
-                        processedMidi.addEvent(juce::MidiMessage::noteOn(message.getChannel(), currentNote, message.getVelocity()), time);
+                        processedMidi.addEvent(juce::MidiMessage::noteOn(message.getChannel(), note, message.getVelocity()), time);
                     }
                     else if (message.isNoteOff())
                     {
-                        processedMidi.addEvent(juce::MidiMessage::noteOff(message.getChannel(), currentNote, message.getVelocity()), time);
+                        processedMidi.addEvent(juce::MidiMessage::noteOff(message.getChannel(), note, message.getVelocity()), time);
                     }
                 }
+            } else {
+                cout << "filtered";
             }
         }
+        else
+        {
+            processedMidi.addEvent(message, time);
+        }
     }
+
     midiMessages.swapWith(processedMidi);
 }
 
@@ -203,11 +224,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout ChordArperAudioProcessor::ge
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
 
     parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_ROOT_NOTE, "Scale root note", juce::StringArray({"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"}), 3));
-    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_MODE, "Scale mode", juce::StringArray({"Major", "Minor", "Lydian", "Mixolydian", "Dorian", "Phrygian", "Pentatonic"}), 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_MODE, "Scale mode", juce::StringArray({"Major", "Minor", "Lydian", "Mixolydian", "Dorian", "Phrygian", "Pentatonic", "Locrian"}), 0));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_SCALES_FILTER_NOTES, "Filter Notes out of the scale", false));
 
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_CHORDS_ENABLE, "Activate chords", false));
-    parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_CHORDS_NOTES_NUMBER, "Number of notes", 1, 4, 3));
+    parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_CHORDS_NOTES_NUMBER, "Number of notes", 1, 5, 3));
     parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_CHORDS_INVERSION, "Number of inversions", 0, 3, 0));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_CHORDS_OCTAVE_UP, "Add octave up", false));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_CHORDS_OCTAVE_DOWN, "Add octave down", false));

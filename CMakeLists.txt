@@ -26,7 +26,7 @@ juce_add_plugin(ChordArper
         VST3_CATEGORIES "Fx Instrument Tools"
         AU_MAIN_TYPE "kAudioUnitType_MIDIProcessor"
         EDITOR_WANTS_KEYBOARD_FOCUS TRUE
-        COPY_PLUGIN_AFTER_BUILD FALSE
+        COPY_PLUGIN_AFTER_BUILD TRUE
         PLUGIN_MANUFACTURER_CODE Larx
         PLUGIN_CODE Larx
         FORMATS AU VST3 Standalone

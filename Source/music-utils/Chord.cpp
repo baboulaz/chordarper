@@ -1,19 +1,16 @@
 #include "Chord.h"
 
-Chord::Chord(){
-
-};
 Chord::Chord(int rootNote)
 {
     listOfNotes.insert(rootNote);
-};
+}
 Chord::~Chord(){
-
-};
+    
+}
 void Chord::addNote(int note)
 {
     listOfNotes.insert(note);
-};
+}
 void Chord::invert(int numberOfInversions) {
     if(numberOfInversions > 0 && numberOfInversions < 4 && listOfNotes.size() >= 2) {
         for(int i=0; i<numberOfInversions; i++) {
@@ -24,8 +21,8 @@ void Chord::invert(int numberOfInversions) {
             }
         }
     }
-};
-std::set<int> Chord::getListOfNotes()
+}
+std::set<int>& Chord::getListOfNotes()
 {
     return listOfNotes;
-};
+}
