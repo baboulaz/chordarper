@@ -6,7 +6,13 @@
 */
 
 #pragma once
-
+namespace ProjectInfo
+{
+    const char* const  projectName    = "ChordArper";
+    const char* const  companyName    = "schieberlein";
+    const char* const  versionString  = "1.0.0";
+    const int          versionNumber  = 0x10000;
+}
 //==============================================================================
 // Audio plugin settings..
 

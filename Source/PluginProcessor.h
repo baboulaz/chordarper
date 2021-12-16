@@ -8,7 +8,20 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_audio_devices/juce_audio_devices.h>
+#include <juce_audio_formats/juce_audio_formats.h>
+#include <juce_audio_plugin_client/juce_audio_plugin_client.h>
+#include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_audio_utils/juce_audio_utils.h>
+#include <juce_core/juce_core.h>
+#include <juce_data_structures/juce_data_structures.h>
+#include <juce_events/juce_events.h>
+#include <juce_graphics/juce_graphics.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <juce_gui_extra/juce_gui_extra.h>
+
+#include "music-utils/Scale.h"
 
 #define PARAM_SETNAME "ChordArperParams"
 #define PARAM_SCALES_ROOT_NOTE "rootNote"
@@ -24,48 +37,6 @@
 #define PARAM_ARPEGGIATOR_ENABLE "enableArpeggiator"
 #define PARAM_ARPEGGIATOR_SPEED "arpeggiatorSpeed"
 
-enum ScaleRootNode
-{
-  A,
-  A_SHARP,
-  B,
-  C,
-  C_SHARP,
-  D,
-  D_SHARP,
-  E,
-  F,
-  F_SHARP,
-  G,
-  G_SHARP
-};
-
-enum ScaleMode
-{
-  Major,
-  Minor,
-  Lydian,
-  Mixolydian,
-  Dorian,
-  Phrygian,
-  Pentatonic
-};
-
-enum ChordNoteNumber
-{
-  ONE_NOTE,
-  TWO_NOTES,
-  THREE_NOTES,
-  FOUR_NOTES
-};
-
-enum ChordInversion
-{
-  DISABLED,
-  ONE,
-  TWO,
-  THREE
-};
 enum ArpeggiatorSpeed
 {
   Speed_1_1,
@@ -78,14 +49,15 @@ enum ArpeggiatorSpeed
   Speed_1_32,
   Speed_1_32T
 };
+
 struct ChainSettings
 {
-  ScaleRootNode rootNote{ScaleRootNode::C};
+  ScaleRootNote rootNote{ScaleRootNote::C};
   ScaleMode mode{ScaleMode::Major};
   bool filterNotes{false};
   bool enableChords{false};
-  ChordNoteNumber chordsNotesNumber{ChordNoteNumber::THREE_NOTES};
-  ChordInversion chordsInversion{ChordInversion::DISABLED};
+  int chordsNotesNumber{3};
+  int chordsInversion{0};
   bool chordsOctaveUp{false};
   bool chordsOctaveDown{false};
   bool enableArpeggiator{false};
@@ -106,9 +78,7 @@ public:
   void prepareToPlay(double sampleRate, int samplesPerBlock) override;
   void releaseResources() override;
 
-#ifndef JucePlugin_PreferredChannelConfigurations
   bool isBusesLayoutSupported(const BusesLayout &layouts) const override;
-#endif
 
   void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
 
@@ -142,15 +112,8 @@ public:
 private:
   juce::AudioProcessorValueTreeState mState{*this, new juce::UndoManager(), juce::Identifier(PARAM_SETNAME), getParameterLayout()};
 
-  void scales(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
-  void chords(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
+  void scalesAndChords(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
   void arpeggiator(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
-
-  int getFifth(int noteNumber, ScaleRootNode rootNode, ScaleMode mode);
-  int getThird(int noteNumber, ScaleRootNode rootNode, ScaleMode mode);
-  int getSeventh(int noteNumber, ScaleRootNode rootNode, ScaleMode mode);
-  int getOctaveUp(int noteNumber, ScaleRootNode rootNode, ScaleMode mode);
-  int getOctaveDown(int noteNumber, ScaleRootNode rootNode, ScaleMode mode);
 
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordArperAudioProcessor)
