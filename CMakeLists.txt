@@ -8,7 +8,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
 endif()
 
-add_subdirectory(Vendor/JUCE)
+add_subdirectory(Vendor/JUCE-LV2)
 
 # juce_add_binary_data(ChordArperBinaries
 #         HEADER_NAME ChordArperBinaryData.h
@@ -29,8 +29,9 @@ juce_add_plugin(ChordArper
         COPY_PLUGIN_AFTER_BUILD TRUE
         PLUGIN_MANUFACTURER_CODE Larx
         PLUGIN_CODE Larx
-        FORMATS AU VST3 Standalone
-        NEEDS_CURL TRUE
+        FORMATS AU VST3 LV2 Standalone
+        LV2_URI https://github.com/baboulaz/chordarper
+        NEEDS_CURL FALSE
         PRODUCT_NAME "ChordArper")
 
 if(MINGW)

@@ -90,22 +90,35 @@ bool ChordArperAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts
     return true;
 }
 
-void ChordArperAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages)
+void ChordArperAudioProcessor::processBlock(juce::AudioBuffer<float> &audio, juce::MidiBuffer &midiMessages)
 {
-    buffer.clear();
+    juce::ScopedNoDenormals noDenormals;
+
+    auto totalNumInputChannels = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+    auto numSamples = audio.getNumSamples();
+
+    // Clear output channels
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        audio.clear(i, 0, numSamples);
 
     auto chainSettings = getChainSettings();
 
-    scalesAndChords(midiMessages, chainSettings);
-    
+    // juce::MidiBuffer processedMidi;
+    // midiMessages.clear();
+    // midiMessages.swapWith(processedMidi);
+
+    scalesAndChords(numSamples, midiMessages, chainSettings);
+
     // arpeggiator(midiMessages, chainSettings);
 }
 
-void ChordArperAudioProcessor::scalesAndChords(juce::MidiBuffer &midiMessages, ChainSettings chainSettings)
+void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer &midiMessages, ChainSettings &chainSettings)
 {
     juce::MidiBuffer processedMidi;
 
-    for (const juce::MidiMessageMetadata metadata : midiMessages)
+    for (const auto metadata : midiMessages)
     {
         auto message = metadata.getMessage();
         const auto time = metadata.samplePosition;
@@ -150,8 +163,6 @@ void ChordArperAudioProcessor::scalesAndChords(juce::MidiBuffer &midiMessages, C
                         processedMidi.addEvent(juce::MidiMessage::noteOff(message.getChannel(), note, message.getVelocity()), time);
                     }
                 }
-            } else {
-                cout << "filtered";
             }
         }
         else
@@ -159,7 +170,7 @@ void ChordArperAudioProcessor::scalesAndChords(juce::MidiBuffer &midiMessages, C
             processedMidi.addEvent(message, time);
         }
     }
-
+    midiMessages.clear();
     midiMessages.swapWith(processedMidi);
 }
 

@@ -112,7 +112,7 @@ public:
 private:
   juce::AudioProcessorValueTreeState mState{*this, new juce::UndoManager(), juce::Identifier(PARAM_SETNAME), getParameterLayout()};
 
-  void scalesAndChords(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
+  void scalesAndChords(int numSamples, juce::MidiBuffer &midi, ChainSettings &chainSettings);
   void arpeggiator(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
 
   //==============================================================================

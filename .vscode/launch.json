@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "attach",
             "processId": "${command:pickProcess}",
-            "program": "/usr/lib/ardour6/ardour-6.6.0~ds0",
+            "program": "/usr/lib/ardour6/ardour-6.9.0~ds0",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
