@@ -39,9 +39,9 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    ChordArperAudioProcessor& audioProcessor;
-
+    std::unique_ptr<ScalePanel> scalePanel;
+    std::unique_ptr<ChordPanel> chordPanel;
+    std::unique_ptr<ArpeggiatorPanel> arpeggiatorPanel;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChordArperAudioProcessorEditor)
 };

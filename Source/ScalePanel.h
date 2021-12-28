@@ -22,25 +22,34 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
+#include "PluginProcessor.h"
+#include "music-utils/Scale.h"
 
 //==============================================================================
 /*
-*/
+ */
 class ScalePanel : public juce::Component
 {
 public:
-  ScalePanel();
+  ScalePanel(ChordArperAudioProcessor &p);
   ~ScalePanel() override;
 
   void paint(juce::Graphics &) override;
   void resized() override;
 
 private:
-  juce::ComboBox rootNoteCombo;
-  juce::ComboBox modeCombo;
-  juce::ToggleButton filterNote;
+  ChordArperAudioProcessor &audioProcessor;
+
   juce::MidiKeyboardState keyboardState;
   juce::MidiKeyboardComponent keyboard;
+
+  std::unique_ptr<juce::ComboBox> rootNoteCombo;
+  std::unique_ptr<juce::ComboBox> modeCombo;
+  std::unique_ptr<juce::ToggleButton> filterNote;
+
+  std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> rootNoteAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> modeAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> filterAttachment;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScalePanel)
 };

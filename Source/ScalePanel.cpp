@@ -7,51 +7,65 @@
 
   ==============================================================================
 */
-
 #include "ScalePanel.h"
 
 //==============================================================================
-ScalePanel::ScalePanel() : keyboard(keyboardState, juce::MidiKeyboardComponent::Orientation::horizontalKeyboard)
+ScalePanel::ScalePanel(ChordArperAudioProcessor &p) : audioProcessor(p), keyboard(keyboardState, juce::MidiKeyboardComponent::Orientation::horizontalKeyboard)
 {
-  keyboard.setAvailableRange(60,71);
+  rootNoteCombo = std::make_unique<juce::ComboBox>();
+  modeCombo = std::make_unique<juce::ComboBox>();
+  filterNote = std::make_unique<juce::ToggleButton>();
+
+  keyboard.setAvailableRange(60, 71);
   addAndMakeVisible(keyboard);
 
-  rootNoteCombo.addItem("A", 1);
-  rootNoteCombo.addItem("A#", 2);
-  rootNoteCombo.addItem("B", 3);
-  rootNoteCombo.addItem("C", 4);
-  rootNoteCombo.addItem("C#", 5);
-  rootNoteCombo.addItem("D", 6);
-  rootNoteCombo.addItem("D#", 7);
-  rootNoteCombo.addItem("E", 8);
-  rootNoteCombo.addItem("F", 9);
-  rootNoteCombo.addItem("F#", 10);
-  rootNoteCombo.addItem("G", 11);
-  rootNoteCombo.addItem("G#", 12);
+  rootNoteCombo->addItem("C", ScaleRootNote::C+1);
+  rootNoteCombo->addItem("C#", ScaleRootNote::C_SHARP+1);
+  rootNoteCombo->addItem("D", ScaleRootNote::D+1);
+  rootNoteCombo->addItem("D#", ScaleRootNote::D_SHARP+1);
+  rootNoteCombo->addItem("E", ScaleRootNote::E+1);
+  rootNoteCombo->addItem("F", ScaleRootNote::F+1);
+  rootNoteCombo->addItem("F#", ScaleRootNote::F_SHARP+1);
+  rootNoteCombo->addItem("G", ScaleRootNote::G+1);
+  rootNoteCombo->addItem("G#", ScaleRootNote::G_SHAR+1);
+  rootNoteCombo->addItem("A", ScaleRootNote::A+1);
+  rootNoteCombo->addItem("A#", ScaleRootNote::A_SHARP+1);
+  rootNoteCombo->addItem("B", ScaleRootNote::B+1);
 
-  rootNoteCombo.setSelectedId(4);
+  rootNoteCombo->setSelectedId(4);
 
-  addAndMakeVisible(rootNoteCombo);
+  addAndMakeVisible(*rootNoteCombo);
 
-  modeCombo.addItem("Major", 1);
-  modeCombo.addItem("Minor", 2);
-  modeCombo.addItem("Lydian", 3);
-  modeCombo.addItem("Mixolydian", 4);
-  modeCombo.addItem("Dorian", 5);
-  modeCombo.addItem("Phrygian", 6);
-  modeCombo.addItem("Pentatonic", 7);
+  modeCombo->addItem("Major", ScaleMode::Major);
+  modeCombo->addItem("Minor", ScaleMode::Minor);
+  modeCombo->addItem("Lydian", ScaleMode::Lydian);
+  modeCombo->addItem("Mixolydian", ScaleMode::Mixolydian);
+  modeCombo->addItem("Dorian", ScaleMode::Dorian);
+  modeCombo->addItem("Phrygian", ScaleMode::Phrygian);
+  modeCombo->addItem("Locrian", ScaleMode::Locrian);
 
-  modeCombo.setSelectedId(1);
+  modeCombo->setSelectedId(1);
 
-  addAndMakeVisible(modeCombo);
+  addAndMakeVisible(*modeCombo);
 
-  filterNote.setButtonText("Filter notes");
-  
-  addAndMakeVisible(filterNote);
+  filterNote->setButtonText("Filter notes");
+  filterNote->setClickingTogglesState(true);
+
+  addAndMakeVisible(*filterNote);
+
+  rootNoteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.getState(), PARAM_SCALES_ROOT_NOTE, *rootNoteCombo);
+  modeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.getState(), PARAM_SCALES_MODE, *modeCombo);
+  filterAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getState(), PARAM_SCALES_FILTER_NOTES, *filterNote);
 }
 
 ScalePanel::~ScalePanel()
 {
+  rootNoteCombo = nullptr;
+  modeCombo = nullptr;
+  filterNote = nullptr;
+  rootNoteAttachment = nullptr;
+  modeAttachment = nullptr;
+  filterAttachment = nullptr;
 }
 
 void ScalePanel::paint(juce::Graphics &g)
@@ -76,9 +90,9 @@ void ScalePanel::paint(juce::Graphics &g)
 
 void ScalePanel::resized()
 {
-  rootNoteCombo.setBounds(10, 50, 200, 20);
-  modeCombo.setBounds(10, 80, 200, 20);
-  filterNote.setBounds(10, 110, 200, 20);
+  rootNoteCombo->setBounds(10, 50, 200, 20);
+  modeCombo->setBounds(10, 80, 200, 20);
+  filterNote->setBounds(10, 110, 200, 20);
   keyboard.setBounds(10, 140, 200, 120);
   // This method is where you should set the bounds of any child
   // components that your component contains..

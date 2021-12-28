@@ -22,20 +22,25 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
+#include "PluginProcessor.h"
+
 //==============================================================================
 /*
-*/
+ */
 class ArpeggiatorPanel : public juce::Component
 {
 public:
-  ArpeggiatorPanel();
+  ArpeggiatorPanel(ChordArperAudioProcessor &p);
   ~ArpeggiatorPanel() override;
 
   void paint(juce::Graphics &) override;
   void resized() override;
 
 private:
-  juce::ToggleButton enable;
+  ChordArperAudioProcessor &audioProcessor;
+
+  std::unique_ptr<juce::ToggleButton> enableButton;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableAttachment;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArpeggiatorPanel)
 };

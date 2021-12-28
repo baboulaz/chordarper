@@ -31,7 +31,7 @@ juce_add_plugin(ChordArper
         PLUGIN_CODE Larx
         FORMATS AU VST3 LV2 Standalone
         LV2_URI https://github.com/baboulaz/chordarper
-        NEEDS_CURL FALSE
+        NEEDS_CURL TRUE
         PRODUCT_NAME "ChordArper")
 
 if(MINGW)

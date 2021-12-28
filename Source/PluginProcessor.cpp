@@ -105,6 +105,12 @@ void ChordArperAudioProcessor::processBlock(juce::AudioBuffer<float> &audio, juc
 
     auto chainSettings = getChainSettings();
 
+    juce::AudioPlayHead::CurrentPositionInfo cpi; // NOLINT
+    if (getPlayHead() != nullptr)
+    {
+        getPlayHead()->getCurrentPosition(cpi);
+    }
+
     // juce::MidiBuffer processedMidi;
     // midiMessages.clear();
     // midiMessages.swapWith(processedMidi);
@@ -128,19 +134,19 @@ void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer 
             int note = message.getNoteNumber();
 
             Scale scale = Scale(chainSettings.rootNote, chainSettings.mode);
-            int noteFiltered = scale.getNoteOnScale(note, chainSettings.filterNotes);
-            if (noteFiltered != -1)
+            uint8_t noteFiltered = scale.getNoteOnScale(note, chainSettings.filterNotes);
+            if (noteFiltered != 255)
             {
                 if (chainSettings.enableChords)
                 {
                     Chord chord = scale.getChord(noteFiltered, chainSettings.chordsNotesNumber, chainSettings.chordsInversion, chainSettings.chordsOctaveUp, chainSettings.chordsOctaveDown);
 
-                    std::set<int> &listNotes = chord.getListOfNotes();
+                    std::set<uint8_t> &listNotes = chord.getListOfNotes();
                     if (listNotes.size() > 0)
                     {
                         for (auto it = listNotes.begin(); it != listNotes.end(); it++)
                         {
-                            int currentNote = *it;
+                            uint8_t currentNote = *it;
                             if (message.isNoteOn())
                             {
                                 processedMidi.addEvent(juce::MidiMessage::noteOn(message.getChannel(), currentNote, message.getVelocity()), time);
@@ -156,11 +162,11 @@ void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer 
                 {
                     if (message.isNoteOn())
                     {
-                        processedMidi.addEvent(juce::MidiMessage::noteOn(message.getChannel(), note, message.getVelocity()), time);
+                        processedMidi.addEvent(juce::MidiMessage::noteOn(message.getChannel(), noteFiltered, message.getVelocity()), time);
                     }
                     else if (message.isNoteOff())
                     {
-                        processedMidi.addEvent(juce::MidiMessage::noteOff(message.getChannel(), note, message.getVelocity()), time);
+                        processedMidi.addEvent(juce::MidiMessage::noteOff(message.getChannel(), noteFiltered, message.getVelocity()), time);
                     }
                 }
             }
@@ -189,11 +195,16 @@ bool ChordArperAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor *ChordArperAudioProcessor::createEditor()
 {
-    // return new ChordArperAudioProcessorEditor(*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new ChordArperAudioProcessorEditor(*this);
+    //return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
+juce::AudioProcessorValueTreeState& ChordArperAudioProcessor::getState()
+{
+    return mState;
+}
+
 void ChordArperAudioProcessor::getStateInformation(juce::MemoryBlock &destData)
 {
     juce::MemoryOutputStream stream(destData, false);
@@ -216,7 +227,7 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
 {
     ChainSettings settings;
 
-    settings.rootNote = static_cast<ScaleRootNote>(mState.getRawParameterValue(PARAM_SCALES_ROOT_NOTE)->load());
+    settings.rootNote = static_cast<ScaleRootNote>(mState.getRawParameterValue(PARAM_SCALES_ROOT_NOTE)->load()-1);
     settings.mode = static_cast<ScaleMode>(mState.getRawParameterValue(PARAM_SCALES_MODE)->load());
     settings.filterNotes = mState.getRawParameterValue(PARAM_SCALES_FILTER_NOTES)->load() > 0.5f;
     settings.enableChords = mState.getRawParameterValue(PARAM_CHORDS_ENABLE)->load() > 0.5f;
@@ -234,8 +245,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout ChordArperAudioProcessor::ge
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
 
-    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_ROOT_NOTE, "Scale root note", juce::StringArray({"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"}), 3));
-    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_MODE, "Scale mode", juce::StringArray({"Major", "Minor", "Lydian", "Mixolydian", "Dorian", "Phrygian", "Pentatonic", "Locrian"}), 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_ROOT_NOTE, "Scale root note", juce::StringArray({"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}), 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_SCALES_MODE, "Scale mode", juce::StringArray({"Major", "Minor", "Lydian", "Mixolydian", "Dorian", "Phrygian", "Locrian"}), 0));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_SCALES_FILTER_NOTES, "Filter Notes out of the scale", false));
 
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_CHORDS_ENABLE, "Activate chords", false));

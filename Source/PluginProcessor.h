@@ -20,7 +20,6 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
-
 #include "music-utils/Scale.h"
 
 #define PARAM_SETNAME "ChordArperParams"
@@ -66,7 +65,7 @@ struct ChainSettings
 
 //==============================================================================
 /**
-*/
+ */
 class ChordArperAudioProcessor : public juce::AudioProcessor
 {
 public:
@@ -104,6 +103,7 @@ public:
   //==============================================================================
   void getStateInformation(juce::MemoryBlock &destData) override;
   void setStateInformation(const void *data, int sizeInBytes) override;
+  juce::AudioProcessorValueTreeState& getState();
 
   ChainSettings getChainSettings();
 

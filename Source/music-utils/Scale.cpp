@@ -24,50 +24,93 @@ Scale::~Scale()
 {
 }
 
-std::string Scale::getNoteName(int noteNumber)
+uint8_t Scale::getNoteDegree(uint8_t noteNumber)
 {
-    return notes[noteNumber % (int)12];
+    return (noteNumber - rootNote) % uint8_t(12);
 }
 
-int Scale::getThird(int noteNumber)
+uint8_t Scale::getNotePosition(uint8_t degree)
 {
-    return noteNumber + 4;
+    auto vector = degrees.at(mode);
+    std::vector<uint8_t>::iterator it = std::find(vector.begin(), vector.end(), degree);
+    if (it != vector.end())
+        return std::distance(vector.begin(), it);
+    else
+        return NOT_FOUND;
 }
-int Scale::getFifth(int noteNumber)
-{
-    return noteNumber + 7;
-}
-int Scale::getSeventh(int noteNumber)
-{
-    return noteNumber + 9;
-}
-int Scale::getNineth(int noteNumber)
-{
-    return noteNumber + 13;
-}
-int Scale::getOctaveUp(int noteNumber)
-{
-    return noteNumber + 12;
-}
-int Scale::getOctaveDown(int noteNumber)
-{
-    return noteNumber - 12;
-}
-int Scale::getNoteOnScale(int noteNumber, bool filterNote)
-{
-    std::vector<int> scale = degrees.at(mode);
 
-    if (std::find(scale.begin(), scale.end(), noteNumber % 12) != scale.end())
+std::string Scale::getNoteName(uint8_t noteNumber)
+{
+    return notes[getNoteDegree(noteNumber)];
+}
+
+uint8_t Scale::getNote(uint8_t noteNumber, uint8_t noteDegree)
+{
+    uint8_t degree = getNoteDegree(noteNumber);
+    uint8_t position = getNotePosition(degree);
+    if (position == NOT_FOUND)
+        return NOT_FOUND;
+    uint8_t newPosition = (position + uint8_t(noteDegree)) % uint8_t(7);
+    uint8_t start = degrees.at(mode)[position];
+    uint8_t finish = degrees.at(mode)[newPosition];
+    uint8_t newNote = noteNumber + (start > finish ? (12 - start) + finish : finish - start);
+    return newNote < 128 ? newNote : NOT_FOUND;
+}
+
+uint8_t Scale::getThird(uint8_t noteNumber)
+{
+    return getNote(noteNumber, 2);
+}
+uint8_t Scale::getFifth(uint8_t noteNumber)
+{
+    return getNote(noteNumber, 4);
+}
+uint8_t Scale::getSeventh(uint8_t noteNumber)
+{
+    return getNote(noteNumber, 6);
+}
+uint8_t Scale::getNineth(uint8_t noteNumber)
+{
+    uint8_t newNote = getNote(noteNumber, 1) + 12;
+    return newNote < 128 ? newNote : NOT_FOUND;
+}
+uint8_t Scale::getOctaveUp(uint8_t noteNumber)
+{
+    uint8_t newNote = noteNumber + 12;
+    return newNote < 128 ? newNote : NOT_FOUND;
+}
+uint8_t Scale::getOctaveDown(uint8_t noteNumber)
+{
+    uint8_t newNote = noteNumber - 12;
+    return newNote >= 0 ? newNote : NOT_FOUND;
+}
+uint8_t Scale::getNoteOnScale(uint8_t noteNumber, bool filterNote)
+{
+    uint8_t degree = getNoteDegree(noteNumber);
+    uint8_t position = getNotePosition(degree);
+    if (position == NOT_FOUND)
     {
-        return noteNumber;
+        if (filterNote)
+        {
+            return NOT_FOUND;
+        }
+        else
+        {
+            uint8_t degreeCorrection = getNoteDegree(noteNumber - 1);
+            uint8_t positionCorrection = getNotePosition(degreeCorrection);
+            if (positionCorrection == NOT_FOUND) {
+                return noteNumber - 1;
+            }
+            return NOT_FOUND;
+        }
     }
     else
     {
-        return -1;
+        return noteNumber;
     }
 }
 
-Chord Scale::createChord(int firstNote, int numberOfNotes)
+Chord Scale::createChord(uint8_t firstNote, uint8_t numberOfNotes)
 {
     switch (numberOfNotes)
     {
@@ -86,7 +129,7 @@ Chord Scale::createChord(int firstNote, int numberOfNotes)
     }
 }
 
-Chord Scale::getChord(int firstNote, int numberOfNotes, int numberOfInversions, bool addOctaveUp, bool addOctaveDown)
+Chord Scale::getChord(uint8_t firstNote, uint8_t numberOfNotes, uint8_t numberOfInversions, bool addOctaveUp, bool addOctaveDown)
 {
     Chord chord = createChord(firstNote, numberOfNotes);
 
@@ -106,20 +149,20 @@ Chord Scale::getChord(int firstNote, int numberOfNotes, int numberOfInversions, 
 
     return chord;
 }
-Chord Scale::getDyad(int noteNumber)
+Chord Scale::getDyad(uint8_t noteNumber)
 {
     Chord chord = Chord(noteNumber);
     chord.addNote(getFifth(noteNumber));
     return chord;
 }
-Chord Scale::getTriad(int noteNumber)
+Chord Scale::getTriad(uint8_t noteNumber)
 {
     Chord chord = Chord(noteNumber);
     chord.addNote(getThird(noteNumber));
     chord.addNote(getFifth(noteNumber));
     return chord;
 }
-Chord Scale::getTetrad(int noteNumber)
+Chord Scale::getTetrad(uint8_t noteNumber)
 {
     Chord chord = Chord(noteNumber);
     chord.addNote(getThird(noteNumber));
@@ -127,7 +170,7 @@ Chord Scale::getTetrad(int noteNumber)
     chord.addNote(getSeventh(noteNumber));
     return chord;
 }
-Chord Scale::getPentad(int noteNumber)
+Chord Scale::getPentad(uint8_t noteNumber)
 {
     Chord chord = Chord(noteNumber);
     chord.addNote(getThird(noteNumber));

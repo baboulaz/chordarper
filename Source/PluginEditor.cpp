@@ -6,26 +6,32 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
-
-juce::OwnedArray<juce::Component> items;
+#include "PluginProcessor.h"
 
 //==============================================================================
 ChordArperAudioProcessorEditor::ChordArperAudioProcessorEditor(ChordArperAudioProcessor &p)
-    : AudioProcessorEditor(&p), audioProcessor(p)
+    : AudioProcessorEditor(&p)
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
-  addAndMakeVisible(items.add(new ScalePanel()));
-  addAndMakeVisible(items.add(new ChordPanel()));
-  addAndMakeVisible(items.add(new ArpeggiatorPanel()));
+
+  scalePanel = std::make_unique<ScalePanel>(p);
+  chordPanel = std::make_unique<ChordPanel>(p);
+  arpeggiatorPanel = std::make_unique<ArpeggiatorPanel>(p);
+
+  addAndMakeVisible(*scalePanel);
+  addAndMakeVisible(*chordPanel);
+  addAndMakeVisible(*arpeggiatorPanel);
   
   setSize(800, 600);
 }
 
 ChordArperAudioProcessorEditor::~ChordArperAudioProcessorEditor()
 {
+  scalePanel = nullptr;
+  chordPanel = nullptr;
+  arpeggiatorPanel = nullptr;
 }
 
 
@@ -54,9 +60,9 @@ void ChordArperAudioProcessorEditor::resized()
 
   // grid.autoFlow = juce::Grid::AutoFlow::column;
 
-  grid.items.addArray({juce::GridItem(items[0]),
-                       juce::GridItem(items[1]),
-                       juce::GridItem(items[2]).withArea(2, juce::GridItem::Span (2))});
+  grid.items.addArray({juce::GridItem(*scalePanel),
+                       juce::GridItem(*chordPanel),
+                       juce::GridItem(*arpeggiatorPanel).withArea(2, juce::GridItem::Span (2))});
 
   grid.performLayout(getLocalBounds());
 }
