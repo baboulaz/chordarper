@@ -227,7 +227,7 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
 {
     ChainSettings settings;
 
-    settings.rootNote = static_cast<ScaleRootNote>(mState.getRawParameterValue(PARAM_SCALES_ROOT_NOTE)->load()-1);
+    settings.rootNote = static_cast<ScaleRootNote>(mState.getRawParameterValue(PARAM_SCALES_ROOT_NOTE)->load());
     settings.mode = static_cast<ScaleMode>(mState.getRawParameterValue(PARAM_SCALES_MODE)->load());
     settings.filterNotes = mState.getRawParameterValue(PARAM_SCALES_FILTER_NOTES)->load() > 0.5f;
     settings.enableChords = mState.getRawParameterValue(PARAM_CHORDS_ENABLE)->load() > 0.5f;

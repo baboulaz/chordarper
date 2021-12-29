@@ -40,9 +40,6 @@ public:
 private:
   ChordArperAudioProcessor &audioProcessor;
 
-  juce::MidiKeyboardState keyboardState;
-  juce::MidiKeyboardComponent keyboard;
-
   std::unique_ptr<juce::ComboBox> rootNoteCombo;
   std::unique_ptr<juce::ComboBox> modeCombo;
   std::unique_ptr<juce::ToggleButton> filterNote;

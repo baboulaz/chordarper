@@ -10,14 +10,11 @@
 #include "ScalePanel.h"
 
 //==============================================================================
-ScalePanel::ScalePanel(ChordArperAudioProcessor &p) : audioProcessor(p), keyboard(keyboardState, juce::MidiKeyboardComponent::Orientation::horizontalKeyboard)
+ScalePanel::ScalePanel(ChordArperAudioProcessor &p) : audioProcessor(p)
 {
   rootNoteCombo = std::make_unique<juce::ComboBox>();
   modeCombo = std::make_unique<juce::ComboBox>();
   filterNote = std::make_unique<juce::ToggleButton>();
-
-  keyboard.setAvailableRange(60, 71);
-  addAndMakeVisible(keyboard);
 
   rootNoteCombo->addItem("C", ScaleRootNote::C+1);
   rootNoteCombo->addItem("C#", ScaleRootNote::C_SHARP+1);
@@ -32,19 +29,15 @@ ScalePanel::ScalePanel(ChordArperAudioProcessor &p) : audioProcessor(p), keyboar
   rootNoteCombo->addItem("A#", ScaleRootNote::A_SHARP+1);
   rootNoteCombo->addItem("B", ScaleRootNote::B+1);
 
-  rootNoteCombo->setSelectedId(4);
-
   addAndMakeVisible(*rootNoteCombo);
 
-  modeCombo->addItem("Major", ScaleMode::Major);
-  modeCombo->addItem("Minor", ScaleMode::Minor);
-  modeCombo->addItem("Lydian", ScaleMode::Lydian);
-  modeCombo->addItem("Mixolydian", ScaleMode::Mixolydian);
-  modeCombo->addItem("Dorian", ScaleMode::Dorian);
-  modeCombo->addItem("Phrygian", ScaleMode::Phrygian);
-  modeCombo->addItem("Locrian", ScaleMode::Locrian);
-
-  modeCombo->setSelectedId(1);
+  modeCombo->addItem("Major", ScaleMode::Major+1);
+  modeCombo->addItem("Minor", ScaleMode::Minor+1);
+  modeCombo->addItem("Lydian", ScaleMode::Lydian+1);
+  modeCombo->addItem("Mixolydian", ScaleMode::Mixolydian+1);
+  modeCombo->addItem("Dorian", ScaleMode::Dorian+1);
+  modeCombo->addItem("Phrygian", ScaleMode::Phrygian+1);
+  modeCombo->addItem("Locrian", ScaleMode::Locrian+1);
 
   addAndMakeVisible(*modeCombo);
 
@@ -93,7 +86,6 @@ void ScalePanel::resized()
   rootNoteCombo->setBounds(10, 50, 200, 20);
   modeCombo->setBounds(10, 80, 200, 20);
   filterNote->setBounds(10, 110, 200, 20);
-  keyboard.setBounds(10, 140, 200, 120);
   // This method is where you should set the bounds of any child
   // components that your component contains..
 }

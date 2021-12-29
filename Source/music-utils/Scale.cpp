@@ -76,13 +76,11 @@ uint8_t Scale::getNineth(uint8_t noteNumber)
 }
 uint8_t Scale::getOctaveUp(uint8_t noteNumber)
 {
-    uint8_t newNote = noteNumber + 12;
-    return newNote < 128 ? newNote : NOT_FOUND;
+    return noteNumber + 12 < 128 ? noteNumber + 12 : NOT_FOUND;
 }
 uint8_t Scale::getOctaveDown(uint8_t noteNumber)
 {
-    uint8_t newNote = noteNumber - 12;
-    return newNote >= 0 ? newNote : NOT_FOUND;
+    return noteNumber - 12 >= 0 ? noteNumber - 12 : NOT_FOUND;
 }
 uint8_t Scale::getNoteOnScale(uint8_t noteNumber, bool filterNote)
 {
@@ -98,7 +96,8 @@ uint8_t Scale::getNoteOnScale(uint8_t noteNumber, bool filterNote)
         {
             uint8_t degreeCorrection = getNoteDegree(noteNumber - 1);
             uint8_t positionCorrection = getNotePosition(degreeCorrection);
-            if (positionCorrection == NOT_FOUND) {
+            if (positionCorrection == NOT_FOUND)
+            {
                 return noteNumber - 1;
             }
             return NOT_FOUND;

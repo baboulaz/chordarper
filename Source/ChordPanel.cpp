@@ -25,15 +25,16 @@ ChordPanel::ChordPanel(ChordArperAudioProcessor &p) : audioProcessor(p), keyboar
   notesCombo->addItem("2", 2);
   notesCombo->addItem("3", 3);
   notesCombo->addItem("4", 4);
+  notesCombo->addItem("5", 5);
 
-  notesCombo->setSelectedId(3);
   addAndMakeVisible(*notesCombo);
 
   inversionCombo->addItem("0", 1);
   inversionCombo->addItem("1", 2);
-  inversionCombo->setSelectedId(1);
-  addAndMakeVisible(*inversionCombo);
+  inversionCombo->addItem("2", 3);
+  inversionCombo->addItem("3", 4);
 
+  addAndMakeVisible(*inversionCombo);
   addAndMakeVisible(*octaveUp);
   addAndMakeVisible(*octaveDown);
   addAndMakeVisible(keyboard);
@@ -52,11 +53,11 @@ ChordPanel::~ChordPanel()
   inversionCombo = nullptr;
   octaveUp = nullptr;
   octaveDown = nullptr;
-  enableAttachment= nullptr;
-  notesAttachment= nullptr;
-  inversionAttachment= nullptr;
-  octaveUpAttachment= nullptr;
-  octaveDownAttachment= nullptr;
+  enableAttachment = nullptr;
+  notesAttachment = nullptr;
+  inversionAttachment = nullptr;
+  octaveUpAttachment = nullptr;
+  octaveDownAttachment = nullptr;
 }
 
 void ChordPanel::paint(juce::Graphics &g)

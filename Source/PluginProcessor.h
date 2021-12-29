@@ -38,7 +38,7 @@
 
 enum ArpeggiatorSpeed
 {
-  Speed_1_1,
+  Speed_1_1=0,
   Speed_1_2,
   Speed_1_4,
   Speed_1_8,

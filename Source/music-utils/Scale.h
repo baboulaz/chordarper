@@ -10,28 +10,28 @@
 enum ScaleRootNote
 {
   C = 0,
-  C_SHARP = 1,
-  D = 2,
-  D_SHARP = 3,
-  E = 4,
-  F = 5,
-  F_SHARP = 56,
-  G = 7,
-  G_SHAR = 8,
-  A = 9,
-  A_SHARP = 10,
-  B = 11
+  C_SHARP,
+  D,
+  D_SHARP,
+  E,
+  F,
+  F_SHARP,
+  G,
+  G_SHAR,
+  A,
+  A_SHARP,
+  B
 };
 
 enum ScaleMode
 {
-  Major = 1,
-  Minor = 2,
-  Lydian = 3,
-  Mixolydian = 4,
-  Dorian = 5,
-  Phrygian = 6,
-  Locrian = 7
+  Major = 0,
+  Minor,
+  Lydian,
+  Mixolydian,
+  Dorian,
+  Phrygian,
+  Locrian
 };
 
 const std::vector<std::string> notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
