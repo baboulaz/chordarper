@@ -22,6 +22,7 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
+#include "SwitchButton.h"
 #include "PluginProcessor.h"
 
 //==============================================================================
@@ -39,18 +40,15 @@ public:
 private:
   ChordArperAudioProcessor &audioProcessor;
 
-  std::unique_ptr<juce::ToggleButton> enableButton;
-  std::unique_ptr<juce::ComboBox> notesCombo;
-  std::unique_ptr<juce::ComboBox> inversionCombo;
+  std::unique_ptr<jux::SwitchButton> enableButton;
+  std::unique_ptr<juce::Slider> notesCombo;
+  std::unique_ptr<juce::Slider> inversionCombo;
   std::unique_ptr<juce::ToggleButton> octaveUp;
   std::unique_ptr<juce::ToggleButton> octaveDown;
 
-  juce::MidiKeyboardState keyboardState;
-  juce::MidiKeyboardComponent keyboard;
-
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> notesAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> inversionAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> notesAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inversionAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> octaveUpAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> octaveDownAttachment;
 

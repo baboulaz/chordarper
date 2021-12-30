@@ -178,6 +178,8 @@ void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer 
     }
     midiMessages.clear();
     midiMessages.swapWith(processedMidi);
+
+    keyboardState.processNextMidiBuffer(midiMessages, 0, midiMessages.getNumEvents(), false);
 }
 
 void ChordArperAudioProcessor::arpeggiator(juce::MidiBuffer &midiMessages, ChainSettings chainSettings)
@@ -196,11 +198,11 @@ bool ChordArperAudioProcessor::hasEditor() const
 juce::AudioProcessorEditor *ChordArperAudioProcessor::createEditor()
 {
     return new ChordArperAudioProcessorEditor(*this);
-    //return new juce::GenericAudioProcessorEditor(*this);
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-juce::AudioProcessorValueTreeState& ChordArperAudioProcessor::getState()
+juce::AudioProcessorValueTreeState &ChordArperAudioProcessor::getState()
 {
     return mState;
 }

@@ -19,12 +19,14 @@ ChordArperAudioProcessorEditor::ChordArperAudioProcessorEditor(ChordArperAudioPr
   scalePanel = std::make_unique<ScalePanel>(p);
   chordPanel = std::make_unique<ChordPanel>(p);
   arpeggiatorPanel = std::make_unique<ArpeggiatorPanel>(p);
+  keyboardPanel = std::make_unique<KeyboardPanel>(p);
 
   addAndMakeVisible(*scalePanel);
   addAndMakeVisible(*chordPanel);
   addAndMakeVisible(*arpeggiatorPanel);
-  
-  setSize(800, 600);
+  addAndMakeVisible(*keyboardPanel);
+
+  setSize(1024, 720);
 }
 
 ChordArperAudioProcessorEditor::~ChordArperAudioProcessorEditor()
@@ -32,8 +34,8 @@ ChordArperAudioProcessorEditor::~ChordArperAudioProcessorEditor()
   scalePanel = nullptr;
   chordPanel = nullptr;
   arpeggiatorPanel = nullptr;
+  keyboardPanel = nullptr;
 }
-
 
 //==============================================================================
 void ChordArperAudioProcessorEditor::paint(juce::Graphics &g)
@@ -50,7 +52,7 @@ void ChordArperAudioProcessorEditor::resized()
 
   using Track = juce::Grid::TrackInfo;
 
-  grid.templateRows = {Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1))};
+  grid.templateRows = {Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Px(100))};
 
   grid.templateColumns = {Track(juce::Grid::Fr(1)),
                           Track(juce::Grid::Fr(2))};
@@ -62,8 +64,8 @@ void ChordArperAudioProcessorEditor::resized()
 
   grid.items.addArray({juce::GridItem(*scalePanel),
                        juce::GridItem(*chordPanel),
-                       juce::GridItem(*arpeggiatorPanel).withArea(2, juce::GridItem::Span (2))});
+                       juce::GridItem(*arpeggiatorPanel).withArea(2, juce::GridItem::Span(2)),
+                       juce::GridItem(*keyboardPanel).withArea(3, juce::GridItem::Span(2))});
 
   grid.performLayout(getLocalBounds());
 }
-

@@ -11,37 +11,40 @@
 #include "ChordPanel.h"
 
 //==============================================================================
-ChordPanel::ChordPanel(ChordArperAudioProcessor &p) : audioProcessor(p), keyboard(keyboardState, juce::MidiKeyboardComponent::Orientation::horizontalKeyboard)
+ChordPanel::ChordPanel(ChordArperAudioProcessor &p) : audioProcessor(p)
 {
-  enableButton = std::make_unique<juce::ToggleButton>("Enable Chords");
-  notesCombo = std::make_unique<juce::ComboBox>();
-  inversionCombo = std::make_unique<juce::ComboBox>();
+  enableButton = std::make_unique<jux::SwitchButton>("Enable Chords",false);
+  notesCombo = std::make_unique<juce::Slider>();
+  inversionCombo = std::make_unique<juce::Slider>();
   octaveUp = std::make_unique<juce::ToggleButton>("Add octave up");
   octaveDown = std::make_unique<juce::ToggleButton>("Add octave down");
 
   addAndMakeVisible(*enableButton);
 
-  notesCombo->addItem("1", 1);
-  notesCombo->addItem("2", 2);
-  notesCombo->addItem("3", 3);
-  notesCombo->addItem("4", 4);
-  notesCombo->addItem("5", 5);
+  notesCombo->setSliderStyle(juce::Slider::SliderStyle::Rotary);
+  notesCombo->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow,false,100,20);
+  inversionCombo->setSliderStyle(juce::Slider::SliderStyle::Rotary);
+  inversionCombo->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow,false,100,20);
+  // notesCombo->set("1", 1);
+  // notesCombo->addItem("2", 2);
+  // notesCombo->addItem("3", 3);
+  // notesCombo->addItem("4", 4);
+  // notesCombo->addItem("5", 5);
 
   addAndMakeVisible(*notesCombo);
 
-  inversionCombo->addItem("0", 1);
-  inversionCombo->addItem("1", 2);
-  inversionCombo->addItem("2", 3);
-  inversionCombo->addItem("3", 4);
+  // inversionCombo->addItem("0", 1);
+  // inversionCombo->addItem("1", 2);
+  // inversionCombo->addItem("2", 3);
+  // inversionCombo->addItem("3", 4);
 
   addAndMakeVisible(*inversionCombo);
   addAndMakeVisible(*octaveUp);
   addAndMakeVisible(*octaveDown);
-  addAndMakeVisible(keyboard);
 
   enableAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getState(), PARAM_CHORDS_ENABLE, *enableButton);
-  notesAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.getState(), PARAM_CHORDS_NOTES_NUMBER, *notesCombo);
-  inversionAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.getState(), PARAM_CHORDS_INVERSION, *inversionCombo);
+  notesAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getState(), PARAM_CHORDS_NOTES_NUMBER, *notesCombo);
+  inversionAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getState(), PARAM_CHORDS_INVERSION, *inversionCombo);
   octaveUpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getState(), PARAM_CHORDS_OCTAVE_UP, *octaveUp);
   octaveDownAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getState(), PARAM_CHORDS_OCTAVE_DOWN, *octaveDown);
 }
@@ -76,19 +79,18 @@ void ChordPanel::paint(juce::Graphics &g)
 
   g.setColour(juce::Colours::white);
   g.setFont(14.0f);
-  g.drawText("Chords", getLocalBounds(),
-             juce::Justification::topLeft, true); // draw some placeholder text
+  g.drawText("Chords", getLocalBounds().getX() + 5, getLocalBounds().getY() + 5,
+             200, 20, juce::Justification::topLeft, true); // draw some placeholder text
 }
 
 void ChordPanel::resized()
 {
-  enableButton->setBounds(10, 30, 200, 20);
-  notesCombo->setBounds(10, 80, 200, 20);
-  inversionCombo->setBounds(10, 110, 200, 20);
-  octaveUp->setBounds(10, 140, 200, 20);
-  octaveDown->setBounds(10, 170, 200, 20);
+  enableButton->setBounds(10, 20, 50, 30);
+  notesCombo->setBounds(10, 50, 100, 100);
+  inversionCombo->setBounds(120, 50, 100, 100);
+  octaveUp->setBounds(230, 50, 200, 20);
+  octaveDown->setBounds(230, 80, 200, 20);
 
-  keyboard.setBounds(10, 200, getLocalBounds().getWidth(), 120);
   // This method is where you should set the bounds of any child
   // components that your component contains..
 }

@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    ArpeggiatorPanel.h
-    Created: 13 Dec 2021 8:41:09am
-    Author:  ab
-
-  ==============================================================================
-*/
-
 #pragma once
 
 #include <juce_audio_basics/juce_audio_basics.h>
@@ -22,17 +12,16 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
-#include "SwitchButton.h"
 #include "PluginProcessor.h"
 
 //==============================================================================
 /*
  */
-class ArpeggiatorPanel : public juce::Component
+class KeyboardPanel : public juce::Component
 {
 public:
-  ArpeggiatorPanel(ChordArperAudioProcessor &p);
-  ~ArpeggiatorPanel() override;
+  KeyboardPanel(ChordArperAudioProcessor &p);
+  ~KeyboardPanel() override;
 
   void paint(juce::Graphics &) override;
   void resized() override;
@@ -40,8 +29,7 @@ public:
 private:
   ChordArperAudioProcessor &audioProcessor;
 
-  std::unique_ptr<jux::SwitchButton> enableButton;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableAttachment;
+  juce::MidiKeyboardComponent keyboard;
 
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArpeggiatorPanel)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(KeyboardPanel)
 };

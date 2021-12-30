@@ -15,8 +15,7 @@ ArpeggiatorPanel::ArpeggiatorPanel(ChordArperAudioProcessor &p) : audioProcessor
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
-  enableButton = std::make_unique<juce::ToggleButton>();
-  enableButton->setButtonText("Enable Arpeggiator");
+  enableButton = std::make_unique<jux::SwitchButton>("Enable Chords",false);
 
   addAndMakeVisible(*enableButton);
 
@@ -45,13 +44,13 @@ void ArpeggiatorPanel::paint(juce::Graphics &g)
 
   g.setColour(juce::Colours::white);
   g.setFont(14.0f);
-  g.drawText("Arpeggiator", getLocalBounds(),
-             juce::Justification::topLeft, true); // draw some placeholder text
+  g.drawText("Arpeggiator", getLocalBounds().getX() + 5, getLocalBounds().getY() + 5,
+             200, 20, juce::Justification::topLeft, true); // draw some placeholder text
 }
 
 void ArpeggiatorPanel::resized()
 {
   // This method is where you should set the bounds of any child
   // components that your component contains..
-  enableButton->setBounds(10, 30, 200, 20);
+  enableButton->setBounds(10, 30, 50, 30);
 }

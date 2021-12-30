@@ -38,7 +38,7 @@
 
 enum ArpeggiatorSpeed
 {
-  Speed_1_1=0,
+  Speed_1_1 = 0,
   Speed_1_2,
   Speed_1_4,
   Speed_1_8,
@@ -103,11 +103,13 @@ public:
   //==============================================================================
   void getStateInformation(juce::MemoryBlock &destData) override;
   void setStateInformation(const void *data, int sizeInBytes) override;
-  juce::AudioProcessorValueTreeState& getState();
+  juce::AudioProcessorValueTreeState &getState();
 
   ChainSettings getChainSettings();
 
   static juce::AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
+
+  juce::MidiKeyboardState keyboardState;
 
 private:
   juce::AudioProcessorValueTreeState mState{*this, new juce::UndoManager(), juce::Identifier(PARAM_SETNAME), getParameterLayout()};

@@ -22,6 +22,7 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
+#include "SwitchButton.h"
 #include "PluginProcessor.h"
 #include "music-utils/Scale.h"
 
@@ -39,10 +40,14 @@ public:
 
 private:
   ChordArperAudioProcessor &audioProcessor;
+  
+  std::unique_ptr<juce::Label> rootNoteLabel;
+  std::unique_ptr<juce::Label> modeLabel;
+  std::unique_ptr<juce::Label> filterLabel;
 
   std::unique_ptr<juce::ComboBox> rootNoteCombo;
   std::unique_ptr<juce::ComboBox> modeCombo;
-  std::unique_ptr<juce::ToggleButton> filterNote;
+  std::unique_ptr<jux::SwitchButton> filterNote;
 
   std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> rootNoteAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> modeAttachment;

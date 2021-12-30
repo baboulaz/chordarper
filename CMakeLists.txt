@@ -50,6 +50,8 @@ target_sources(ChordArper
         Source/PluginEditor.cpp Source/PluginEditor.h
         Source/PluginProcessor.cpp Source/PluginProcessor.h
         Source/ScalePanel.cpp Source/ScalePanel.h
+        Source/KeyboardPanel.cpp Source/KeyboardPanel.h
+        Source/SwitchButton.h
         )
 
 target_compile_definitions(ChordArper
