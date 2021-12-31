@@ -24,6 +24,8 @@ Download the plugin and place it in your corresponding plugin directory.
 
 ## Screenshots
 
+![alt text](https://github.com/baboulaz/chordarper/blob/main/screeshot.png)
+
 ## Documentation
 
 ## Development
