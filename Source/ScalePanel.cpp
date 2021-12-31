@@ -80,39 +80,21 @@ void ScalePanel::paint(juce::Graphics &g)
 
   g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId)); // clear the background
 
-  g.setColour(juce::Colours::grey);
-  g.drawRect(getLocalBounds(), 1); // draw an outline around the component
+  g.setColour(juce::Colours::greenyellow);
+  g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1,getLocalBounds().getWidth()-2,getLocalBounds().getHeight()-2, 10.0, 4.0); // draw an outline around the component
+  g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1,105,50, 10.0, 2.0); // draw an outline around the component
 
-  g.setColour(juce::Colours::white);
-  g.setFont(14.0f);
-  g.drawText("Scales", getLocalBounds().getX() + 5, getLocalBounds().getY() + 5,
+  g.setFont(30.0f);
+  g.drawText("Scales", getLocalBounds().getX() + 10, getLocalBounds().getY() + 10,
              200, 20, juce::Justification::topLeft, true); // draw some placeholder text
-}
+ }
 
 void ScalePanel::resized()
 {
-
-  juce::Grid grid;
-
-  grid.rowGap = juce::Grid::Px(0);
-  grid.columnGap = juce::Grid::Px(20);
-
-  using Track = juce::Grid::TrackInfo;
-
-  grid.templateRows = {Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1))};
-
-  grid.templateColumns = {Track(juce::Grid::Fr(1))};
-
-  // grid.autoColumns = Track(juce::Grid::Fr(1));
-  // grid.autoRows = Track(juce::Grid::Fr(1));
-
-  // grid.autoFlow = juce::Grid::AutoFlow::column;
-
-  grid.items.addArray({juce::GridItem(*rootNoteLabel),
-                       juce::GridItem(*rootNoteCombo),
-                       juce::GridItem(*modeLabel),
-                       juce::GridItem(*modeCombo),
-                       juce::GridItem(*filterLabel),
-                       juce::GridItem(*filterNote)});
-  grid.performLayout(getLocalBounds().reduced(10));
+  rootNoteLabel->setBounds(10,60,getLocalBounds().getWidth()/2-20,20);
+  rootNoteCombo->setBounds(10,80,getLocalBounds().getWidth()/2-20,30);
+  modeLabel->setBounds(getLocalBounds().getWidth()/2+10,60,getLocalBounds().getWidth()/2-20,20);
+  modeCombo->setBounds(getLocalBounds().getWidth()/2+10,80,getLocalBounds().getWidth()/2-20,30);
+  filterLabel->setBounds(70,155,140,20);
+  filterNote->setBounds(10,150,50,30);
 }

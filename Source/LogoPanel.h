@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    ChordPanel.h
-    Created: 13 Dec 2021 8:40:54am
+    ArpeggiatorPanel.h
+    Created: 13 Dec 2021 8:41:09am
     Author:  ab
 
   ==============================================================================
@@ -22,17 +22,16 @@
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
-#include "SwitchButton.h"
 #include "PluginProcessor.h"
 
 //==============================================================================
 /*
  */
-class ChordPanel : public juce::Component
+class ArpeggiatorPanel : public juce::Component
 {
 public:
-  ChordPanel(ChordArperAudioProcessor &p);
-  ~ChordPanel() override;
+  ArpeggiatorPanel(ChordArperAudioProcessor &p);
+  ~ArpeggiatorPanel() override;
 
   void paint(juce::Graphics &) override;
   void resized() override;
@@ -40,22 +39,8 @@ public:
 private:
   ChordArperAudioProcessor &audioProcessor;
 
-  std::unique_ptr<juce::Label> noteLabel;
-  std::unique_ptr<juce::Label> inversionLabel;
-  std::unique_ptr<juce::Label> octaveUpLabel;
-  std::unique_ptr<juce::Label> octaveDownLabel;
-
   std::unique_ptr<jux::SwitchButton> enableButton;
-  std::unique_ptr<juce::Slider> notesCombo;
-  std::unique_ptr<juce::Slider> inversionCombo;
-  std::unique_ptr<jux::SwitchButton> octaveUp;
-  std::unique_ptr<jux::SwitchButton> octaveDown;
-
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> enableAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> notesAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inversionAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> octaveUpAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> octaveDownAttachment;
 
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordPanel)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArpeggiatorPanel)
 };

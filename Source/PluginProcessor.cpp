@@ -118,6 +118,8 @@ void ChordArperAudioProcessor::processBlock(juce::AudioBuffer<float> &audio, juc
     scalesAndChords(numSamples, midiMessages, chainSettings);
 
     // arpeggiator(midiMessages, chainSettings);
+
+    keyboardState.processNextMidiBuffer(midiMessages, 0, midiMessages.getNumEvents(), false);
 }
 
 void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer &midiMessages, ChainSettings &chainSettings)
@@ -178,8 +180,6 @@ void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer 
     }
     midiMessages.clear();
     midiMessages.swapWith(processedMidi);
-
-    keyboardState.processNextMidiBuffer(midiMessages, 0, midiMessages.getNumEvents(), false);
 }
 
 void ChordArperAudioProcessor::arpeggiator(juce::MidiBuffer &midiMessages, ChainSettings chainSettings)

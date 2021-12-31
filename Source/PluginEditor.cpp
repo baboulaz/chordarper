@@ -41,6 +41,24 @@ ChordArperAudioProcessorEditor::~ChordArperAudioProcessorEditor()
 void ChordArperAudioProcessorEditor::paint(juce::Graphics &g)
 {
   g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+
+  g.setColour(juce::Colours::white);
+  g.fillRect (300, 90, 10, 20);
+  juce::Path path1;
+  juce::Point p11(310.0f,75.0f);
+  juce::Point p12(310.0f,125.0f);
+  juce::Point p13(320.0f,100.0f);
+  path1.addTriangle(p11,p12,p13);
+  g.fillPath(path1);
+
+
+  g.fillRect (320+((getLocalBounds().getWidth()-320) / 2)-10, 200, 20, 10);
+  juce::Path path2;
+  juce::Point p21(320+((getLocalBounds().getWidth()-320) / 2)-25.0f,210.0f);
+  juce::Point p22(320+((getLocalBounds().getWidth()-320) / 2)+25.0f,210.0f);
+  juce::Point p23((float)320+((getLocalBounds().getWidth()-320) / 2),220.0f);
+  path2.addTriangle(p21,p22,p23);
+  g.fillPath(path2);
 }
 
 void ChordArperAudioProcessorEditor::resized()
@@ -52,10 +70,10 @@ void ChordArperAudioProcessorEditor::resized()
 
   using Track = juce::Grid::TrackInfo;
 
-  grid.templateRows = {Track(juce::Grid::Fr(1)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Px(100))};
+  grid.templateRows = {Track(juce::Grid::Px(200)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Px(70))};
 
-  grid.templateColumns = {Track(juce::Grid::Fr(1)),
-                          Track(juce::Grid::Fr(2))};
+  grid.templateColumns = {Track(juce::Grid::Px(300)),
+                          Track(juce::Grid::Fr(1))};
 
   // grid.autoColumns = Track(juce::Grid::Fr(1));
   // grid.autoRows = Track(juce::Grid::Fr(1));

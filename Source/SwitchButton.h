@@ -113,11 +113,12 @@ namespace jux
         };
 
         SwitchButton(juce::String name, bool isInverted)
-            : Button("SwitchButton"), isInverted(isInverted)
+            : Button(name), isInverted(isInverted)
         {
             jux::addDefaultColourIdIfNotSet(switchColour, juce::Colours::white);
             jux::addDefaultColourIdIfNotSet(switchOffBackgroundColour, juce::Colours::darkgrey);
             jux::addDefaultColourIdIfNotSet(switchOnBackgroundColour, juce::Colours::limegreen);
+            setButtonText(name);
             setClickingTogglesState(true);
             addAndMakeVisible(switchCircle);
             switchCircle.setWantsKeyboardFocus(false);

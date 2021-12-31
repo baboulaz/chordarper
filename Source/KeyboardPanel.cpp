@@ -30,17 +30,9 @@ void KeyboardPanel::paint(juce::Graphics &g)
       */
 
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId)); // clear the background
-
-    g.setColour(juce::Colours::grey);
-    g.drawRect(getLocalBounds(), 1); // draw an outline around the component
-
-    g.setColour(juce::Colours::white);
-    g.setFont(14.0f);
-    g.drawText("Keyboard", getLocalBounds().getX() + 5, getLocalBounds().getY() + 5,
-             200, 20, juce::Justification::topLeft, true); // draw some placeholder text
 }
 
 void KeyboardPanel::resized()
 {
-    keyboard.setBounds(15, 30, getLocalBounds().getWidth()-30, 60);
+    keyboard.setBounds(20, 0, getLocalBounds().getWidth()-40, 60);
 }
