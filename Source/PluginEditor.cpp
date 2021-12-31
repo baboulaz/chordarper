@@ -18,11 +18,13 @@ ChordArperAudioProcessorEditor::ChordArperAudioProcessorEditor(ChordArperAudioPr
 
   scalePanel = std::make_unique<ScalePanel>(p);
   chordPanel = std::make_unique<ChordPanel>(p);
+  logoPanel = std::make_unique<LogoPanel>();
   arpeggiatorPanel = std::make_unique<ArpeggiatorPanel>(p);
   keyboardPanel = std::make_unique<KeyboardPanel>(p);
 
   addAndMakeVisible(*scalePanel);
   addAndMakeVisible(*chordPanel);
+  addAndMakeVisible(*logoPanel);
   addAndMakeVisible(*arpeggiatorPanel);
   addAndMakeVisible(*keyboardPanel);
 
@@ -33,6 +35,7 @@ ChordArperAudioProcessorEditor::~ChordArperAudioProcessorEditor()
 {
   scalePanel = nullptr;
   chordPanel = nullptr;
+  logoPanel = nullptr;
   arpeggiatorPanel = nullptr;
   keyboardPanel = nullptr;
 }
@@ -52,11 +55,11 @@ void ChordArperAudioProcessorEditor::paint(juce::Graphics &g)
   g.fillPath(path1);
 
 
-  g.fillRect (320+((getLocalBounds().getWidth()-320) / 2)-10, 200, 20, 10);
+  g.fillRect (320+((getLocalBounds().getWidth()-320-220) / 2)-10, 200, 20, 10);
   juce::Path path2;
-  juce::Point p21(320+((getLocalBounds().getWidth()-320) / 2)-25.0f,210.0f);
-  juce::Point p22(320+((getLocalBounds().getWidth()-320) / 2)+25.0f,210.0f);
-  juce::Point p23((float)320+((getLocalBounds().getWidth()-320) / 2),220.0f);
+  juce::Point p21(320+((getLocalBounds().getWidth()-320-220) / 2)-25.0f,210.0f);
+  juce::Point p22(320+((getLocalBounds().getWidth()-320-220) / 2)+25.0f,210.0f);
+  juce::Point p23((float)320+((getLocalBounds().getWidth()-320-220) / 2),220.0f);
   path2.addTriangle(p21,p22,p23);
   g.fillPath(path2);
 }
@@ -73,7 +76,8 @@ void ChordArperAudioProcessorEditor::resized()
   grid.templateRows = {Track(juce::Grid::Px(200)), Track(juce::Grid::Fr(1)), Track(juce::Grid::Px(70))};
 
   grid.templateColumns = {Track(juce::Grid::Px(300)),
-                          Track(juce::Grid::Fr(1))};
+                          Track(juce::Grid::Fr(1)),
+                          Track(juce::Grid::Px(200))};
 
   // grid.autoColumns = Track(juce::Grid::Fr(1));
   // grid.autoRows = Track(juce::Grid::Fr(1));
@@ -82,8 +86,9 @@ void ChordArperAudioProcessorEditor::resized()
 
   grid.items.addArray({juce::GridItem(*scalePanel),
                        juce::GridItem(*chordPanel),
-                       juce::GridItem(*arpeggiatorPanel).withArea(2, juce::GridItem::Span(2)),
-                       juce::GridItem(*keyboardPanel).withArea(3, juce::GridItem::Span(2))});
+                       juce::GridItem(*logoPanel),
+                       juce::GridItem(*arpeggiatorPanel).withArea(2, juce::GridItem::Span(3)),
+                       juce::GridItem(*keyboardPanel).withArea(3, juce::GridItem::Span(3))});
 
   grid.performLayout(getLocalBounds());
 }

@@ -10,10 +10,11 @@ endif()
 
 add_subdirectory(Vendor/JUCE-LV2)
 
-# juce_add_binary_data(ChordArperBinaries
-#         HEADER_NAME ChordArperBinaryData.h
-#         NAMESPACE ChordArperBin
-#         SOURCES Fonts/overpass-regular.otf)
+juce_add_binary_data(ChordArperBinaries
+         HEADER_NAME ChordArperBinaryData.h
+         NAMESPACE ChordArperBin
+         SOURCES Images/chordaper_logo.svg)
+
 
 juce_add_plugin(ChordArper
         COMPANY_NAME "The ChordArper contributors"
@@ -68,7 +69,7 @@ target_compile_definitions(ChordArper
 
 target_link_libraries(ChordArper
         PRIVATE
-        # ChordArperBinaries
+        ChordArperBinaries
         juce::juce_audio_utils
         juce::juce_audio_plugin_client
         PUBLIC
