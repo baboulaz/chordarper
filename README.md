@@ -1,7 +1,7 @@
 # ChordArper plugin (lv2 / vst3)
 A scales, chords and arpeggiator plugin
 
-![alt text](https://github.com/baboulaz/chordarper/blob/main/Images/chordaper_logo.svg)
+![alt text](https://github.com/baboulaz/chordarper/blob/main/Images/chordaper_logo_with_background.svg)
 
 ## Description
 
