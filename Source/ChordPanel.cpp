@@ -87,10 +87,11 @@ void ChordPanel::paint(juce::Graphics &g)
     */
 
   g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId)); // clear the background
+  g.setColour(juce::Colours::grey);
+  g.fillRect(getLocalBounds().reduced(10)); // clear the background
 
   g.setColour(juce::Colours::orange);
   g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1, getLocalBounds().getWidth() - 2, getLocalBounds().getHeight() - 2, 10.0, 4.0); // draw an outline around the component
-  g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1, 170, 50, 10.0, 2.0);                                                           // draw an outline around the component
 
   g.setColour(juce::Colours::orange);
   g.setFont(30.0f);

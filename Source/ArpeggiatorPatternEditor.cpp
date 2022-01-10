@@ -43,33 +43,39 @@ void ArpeggiatorPatternEditor::paintSteps(juce::Graphics &g)
          You should replace everything in this method with your own
          drawing code..
       */
-    int width = getLocalBounds().getWidth()-20;
+    int width = getLocalBounds().getWidth() - 20;
     int stepWidth = width / 16;
-    g.setColour(juce::Colours::green);
+    g.setColour(juce::Colours::white);
+    g.drawText("S", juce::Rectangle(0, 0, 20, 15).reduced(1), juce::Justification::centred, true);
+
     for (int i = 0; i < 16; i++)
     {
-        if(i> 0 && i%4 == 0) {
-            g.drawVerticalLine(20+stepWidth * i,0,getLocalBounds().getHeight());
+        if (i > 0 && i % 4 == 0)
+        {
+            g.drawVerticalLine(20 + stepWidth * i, 0, getLocalBounds().getHeight());
         }
-        juce::Rectangle stepRect = juce::Rectangle(20+stepWidth * i, 0, stepWidth, 15).reduced(1);
-        g.drawRect(stepRect);
+        juce::Rectangle stepRect = juce::Rectangle(20 + stepWidth * i, 0, stepWidth, 15).reduced(1);
+        g.setColour(juce::Colours::green);
+        g.fillRect(stepRect);
+
+        g.setColour(juce::Colours::white);
         g.drawText(std::to_string(i + 1), stepRect, juce::Justification::centred, true);
     }
 }
 
 void ArpeggiatorPatternEditor::paintPattern(juce::Graphics &g)
 {
-    int width = getLocalBounds().getWidth()-20;
+    int width = getLocalBounds().getWidth() - 20;
     int stepWidth = width / 16;
     int stepHeight = 15;
     g.setColour(juce::Colours::green);
     for (int i = 0; i < 16; i++)
     {
-        g.drawRect(juce::Rectangle(20+stepWidth * i, 30, stepWidth, stepHeight).reduced(1));
-        g.drawRect(juce::Rectangle(20+stepWidth * i, 30 + stepHeight, stepWidth, stepHeight).reduced(1));
-        g.drawRect(juce::Rectangle(20+stepWidth * i, 30 + 2 * stepHeight, stepWidth, stepHeight).reduced(1));
-        g.drawRect(juce::Rectangle(20+stepWidth * i, 30 + 3 * stepHeight, stepWidth, stepHeight).reduced(1));
-        g.drawRect(juce::Rectangle(20+stepWidth * i, 30 + 4 * stepHeight, stepWidth, stepHeight).reduced(1));
+        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30, stepWidth, stepHeight).reduced(1));
+        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + stepHeight, stepWidth, stepHeight).reduced(1));
+        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + 2 * stepHeight, stepWidth, stepHeight).reduced(1));
+        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + 3 * stepHeight, stepWidth, stepHeight).reduced(1));
+        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + 4 * stepHeight, stepWidth, stepHeight).reduced(1));
     }
 }
 
@@ -81,13 +87,19 @@ void ArpeggiatorPatternEditor::paintVelocity(juce::Graphics &g)
          You should replace everything in this method with your own
          drawing code..
       */
-    int width = getLocalBounds().getWidth()-20;
+    int width = getLocalBounds().getWidth() - 20;
     int y = getLocalBounds().getHeight() - 50;
     int stepWidth = width / 16;
+
+    g.setColour(juce::Colours::white);
+    g.drawText("V", juce::Rectangle(0, y, 20, 50).reduced(1), juce::Justification::centred, true);
     g.setColour(juce::Colours::green);
+
     for (int i = 0; i < 16; i++)
     {
-        g.drawRect(juce::Rectangle(20+stepWidth * i, y, stepWidth, 50).reduced(1));
+        juce::Rectangle velRect = juce::Rectangle(20 + stepWidth * i, y, stepWidth, 50).reduced(1);
+        g.drawRect(velRect);
+        g.fillRect(velRect.removeFromBottom(velRect.getHeight()/2));
     }
 }
 

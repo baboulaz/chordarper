@@ -22,7 +22,7 @@ ScalePanel::ScalePanel(ChordArperAudioProcessor &p) : audioProcessor(p)
 
   rootNoteCombo = std::make_unique<juce::ComboBox>();
   modeCombo = std::make_unique<juce::ComboBox>();
-  filterNote = std::make_unique<jux::SwitchButton>("Filter notes",false);
+  filterNote = std::make_unique<jux::SwitchButton>("Filter notes", false);
 
   rootNoteCombo->addItem("C", ScaleRootNote::C + 1);
   rootNoteCombo->addItem("C#", ScaleRootNote::C_SHARP + 1);
@@ -79,22 +79,24 @@ void ScalePanel::paint(juce::Graphics &g)
     */
 
   g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId)); // clear the background
+  g.setColour(juce::Colours::grey);
+  g.fillRect(getLocalBounds().reduced(10)); // clear the background
 
   g.setColour(juce::Colours::greenyellow);
-  g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1,getLocalBounds().getWidth()-2,getLocalBounds().getHeight()-2, 10.0, 4.0); // draw an outline around the component
-  g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1,105,50, 10.0, 2.0); // draw an outline around the component
+  g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1, getLocalBounds().getWidth() - 2, getLocalBounds().getHeight() - 2, 10.0, 4.0); // draw an outline around the component
+  // g.drawRoundedRectangle(getLocalBounds().getX() + 1, getLocalBounds().getY() + 1, 105, 50, 10.0, 2.0);                                                           // draw an outline around the component
 
   g.setFont(30.0f);
-  g.drawText("Scales", getLocalBounds().getX() + 10, getLocalBounds().getY() + 10,
-             200, 20, juce::Justification::topLeft, true); // draw some placeholder text
- }
+  g.drawText("Scales", getLocalBounds().getX() + 20, getLocalBounds().getY() + 10,
+             200, 30, juce::Justification::topLeft, true); // draw some placeholder text
+}
 
 void ScalePanel::resized()
 {
-  rootNoteLabel->setBounds(10,60,getLocalBounds().getWidth()/2-20,20);
-  rootNoteCombo->setBounds(10,80,getLocalBounds().getWidth()/2-20,30);
-  modeLabel->setBounds(getLocalBounds().getWidth()/2+10,60,getLocalBounds().getWidth()/2-20,20);
-  modeCombo->setBounds(getLocalBounds().getWidth()/2+10,80,getLocalBounds().getWidth()/2-20,30);
-  filterLabel->setBounds(70,155,140,20);
-  filterNote->setBounds(10,150,50,30);
+  rootNoteLabel->setBounds(10, 60, getLocalBounds().getWidth() / 2 - 20, 20);
+  rootNoteCombo->setBounds(10, 80, getLocalBounds().getWidth() / 2 - 20, 30);
+  modeLabel->setBounds(getLocalBounds().getWidth() / 2 + 10, 60, getLocalBounds().getWidth() / 2 - 20, 20);
+  modeCombo->setBounds(getLocalBounds().getWidth() / 2 + 10, 80, getLocalBounds().getWidth() / 2 - 20, 30);
+  filterLabel->setBounds(70, 155, 140, 20);
+  filterNote->setBounds(10, 150, 50, 30);
 }
