@@ -184,7 +184,11 @@ void ChordArperAudioProcessor::scalesAndChords(int numSamples, juce::MidiBuffer 
 
 void ChordArperAudioProcessor::arpeggiator(juce::MidiBuffer &midiMessages, ChainSettings chainSettings)
 {
-    if (chainSettings.enableArpeggiator)
+    if (chainSettings.arpegiator1.enable)
+    {
+    }
+    
+    if (chainSettings.arpegiator2.enable)
     {
     }
 }
@@ -232,13 +236,28 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
     settings.rootNote = static_cast<ScaleRootNote>(mState.getRawParameterValue(PARAM_SCALES_ROOT_NOTE)->load());
     settings.mode = static_cast<ScaleMode>(mState.getRawParameterValue(PARAM_SCALES_MODE)->load());
     settings.filterNotes = mState.getRawParameterValue(PARAM_SCALES_FILTER_NOTES)->load() > 0.5f;
+  
     settings.enableChords = mState.getRawParameterValue(PARAM_CHORDS_ENABLE)->load() > 0.5f;
     settings.chordsNotesNumber = mState.getRawParameterValue(PARAM_CHORDS_NOTES_NUMBER)->load();
     settings.chordsInversion = mState.getRawParameterValue(PARAM_CHORDS_INVERSION)->load();
     settings.chordsOctaveUp = mState.getRawParameterValue(PARAM_CHORDS_OCTAVE_UP)->load() > 0.5f;
     settings.chordsOctaveDown = mState.getRawParameterValue(PARAM_CHORDS_OCTAVE_DOWN)->load() > 0.5f;
-    settings.enableArpeggiator = mState.getRawParameterValue(PARAM_ARPEGGIATOR_ENABLE)->load() > 0.5f;
-    settings.arpeggiatorSpeed = static_cast<ArpeggiatorSpeed>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_SPEED)->load());
+
+    settings.arpegiator1.enable = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_ENABLE)->load() > 0.5f;
+    settings.arpegiator1.speed = static_cast<ArpeggiatorSpeed>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_SPEED)->load());
+    settings.arpegiator1.direction = static_cast<ArpeggiatorDirection>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_DIRECTION)->load());
+    settings.arpegiator1.transpose = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_TRANSPOSE)->load();
+    settings.arpegiator1.enableSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_STEPS_ENABLE)->load() > 0.5f;
+    settings.arpegiator1.numberOfSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS)->load();
+    settings.arpegiator1.enableVelocity = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE)->load() > 0.5f;
+
+    settings.arpegiator2.enable = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_ENABLE)->load() > 0.5f;
+    settings.arpegiator2.speed = static_cast<ArpeggiatorSpeed>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_SPEED)->load());
+    settings.arpegiator2.direction = static_cast<ArpeggiatorDirection>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_DIRECTION)->load());
+    settings.arpegiator2.transpose = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_TRANSPOSE)->load();
+    settings.arpegiator2.enableSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_STEPS_ENABLE)->load() > 0.5f;
+    settings.arpegiator2.numberOfSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS)->load();
+    settings.arpegiator2.enableVelocity = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE)->load() > 0.5f;
 
     return settings;
 }
@@ -257,8 +276,20 @@ juce::AudioProcessorValueTreeState::ParameterLayout ChordArperAudioProcessor::ge
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_CHORDS_OCTAVE_UP, "Add octave up", false));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_CHORDS_OCTAVE_DOWN, "Add octave down", false));
 
-    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_ENABLE, "Activate arpeggiator", false));
-    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_SPEED, "Speed", juce::StringArray({"1/1", "1/2", "1/4", "1/8", "1/8T", "1/16", "1/16T", "1/32", "1/32T"}), 3));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_1_ENABLE, "Activate arpeggiator 1", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_1_SPEED, "Arpeggiator 1 Speed", juce::StringArray({"1/1", "1/2", "1/4", "1/8", "1/8T", "1/16", "1/16T", "1/32", "1/32T"}), 3));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_1_DIRECTION, "Arpeggiator 1 Direction", juce::StringArray({"UP", "DOWN", "UP_DOWN", "RANDOM", "PATTERN"}), 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_1_TRANSPOSE, "Arpeggiator 1 Transpose", -3, 3, 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_1_STEPS_ENABLE, "Arpeggiator 1 Enable steps", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS, "Arpeggiator 1  Number of Steps", 1, 16, 1));
+        parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE, "Arpeggiator 1 Enable velocity", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_ENABLE, "Activate arpeggiator 2", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_2_SPEED, "Arpeggiator 2 Speed", juce::StringArray({"1/1", "1/2", "1/4", "1/8", "1/8T", "1/16", "1/16T", "1/32", "1/32T"}), 3));
+    parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_2_DIRECTION, "Arpeggiator 2 Direction", juce::StringArray({"UP", "DOWN", "UP_DOWN", "RANDOM", "PATTERN"}), 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_2_TRANSPOSE, "Arpeggiator 2 Transpose", -3, 3, 0));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_STEPS_ENABLE, "Arpeggiator 2 Enable steps", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS, "Arpeggiator 2  Number of Steps", 1, 16, 1));
+        parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE, "Arpeggiator 2 Enable velocity", false));
 
     return parameterLayout;
 }

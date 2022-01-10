@@ -19,7 +19,7 @@ ChordArperAudioProcessorEditor::ChordArperAudioProcessorEditor(ChordArperAudioPr
   scalePanel = std::make_unique<ScalePanel>(p);
   chordPanel = std::make_unique<ChordPanel>(p);
   logoPanel = std::make_unique<LogoPanel>();
-  arpeggiatorPanel = std::make_unique<ArpeggiatorPanel>(p);
+  arpeggiatorPanel = std::make_unique<DualArpeggiatorPanel>(p);
   keyboardPanel = std::make_unique<KeyboardPanel>(p);
 
   addAndMakeVisible(*scalePanel);

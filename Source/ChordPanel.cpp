@@ -13,8 +13,12 @@
 //==============================================================================
 ChordPanel::ChordPanel(ChordArperAudioProcessor &p) : audioProcessor(p)
 {
-  noteLabel = std::make_unique<juce::Label>("noteLabel", "Number of notes");
-  inversionLabel = std::make_unique<juce::Label>("inversionLabel", "Number of inversions");
+  noteLabel = std::make_unique<juce::Label>("noteLabel", "Notes");
+  noteLabel->setJustificationType(juce::Justification::centred);
+
+  inversionLabel = std::make_unique<juce::Label>("inversionLabel", "Inversions");
+  inversionLabel->setJustificationType(juce::Justification::centred);
+
   octaveUpLabel = std::make_unique<juce::Label>("octaveUpLabel", "Add octave up");
   octaveDownLabel = std::make_unique<juce::Label>("octaveDownLabel", "Add octave down");
 
@@ -98,11 +102,11 @@ void ChordPanel::resized()
 {
   enableButton->setBounds(10, 10, 50, 30);
 
-  notesCombo->setBounds(10, 60, 120, 100);
-  noteLabel->setBounds(10, 160, 120, 20);
+  notesCombo->setBounds(10, 80, 120, 100);
+  noteLabel->setBounds(10, 60, 120, 20);
 
-  inversionCombo->setBounds(140, 60, 120, 100);
-  inversionLabel->setBounds(140, 160, 120, 20);
+  inversionCombo->setBounds(140, 80, 120, 100);
+  inversionLabel->setBounds(140, 60, 120, 20);
 
   octaveUp->setBounds(300, 80, 50, 30);
   octaveUpLabel->setBounds(360, 85, 200, 20);

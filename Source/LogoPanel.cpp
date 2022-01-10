@@ -23,7 +23,7 @@ LogoPanel::~LogoPanel()
 
 void LogoPanel::paint(juce::Graphics &g)
 {
-    juce::Rectangle<int> bounds = getLocalBounds().reduced(10);
+    juce::Rectangle<int> bounds = getLocalBounds().withTrimmedRight(20).withTrimmedTop(20);
     svgLogo->setTransformToFit(bounds.toFloat(), juce::RectanglePlacement::stretchToFit);
     svgLogo->draw(g, 1.0);
 }

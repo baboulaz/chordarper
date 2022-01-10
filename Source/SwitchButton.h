@@ -180,6 +180,9 @@ namespace jux
                 g.setColour(findColour(switchColour));
                 
                 g.fillEllipse(getLocalBounds().toFloat());
+                
+                g.setColour(findColour(switchOnBackgroundColour));
+                g.fillEllipse(getLocalBounds().reduced(4).toFloat());
             }
         } switchCircle;
         juce::ComponentAnimator animator;

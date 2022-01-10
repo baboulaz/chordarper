@@ -24,7 +24,7 @@
 #include "ScalePanel.h"
 #include "ChordPanel.h"
 #include "LogoPanel.h"
-#include "ArpeggiatorPanel.h"
+#include "DualArpeggiatorPanel.h"
 #include "KeyboardPanel.h"
 
 //==============================================================================
@@ -44,7 +44,7 @@ private:
   std::unique_ptr<ScalePanel> scalePanel;
   std::unique_ptr<ChordPanel> chordPanel;
   std::unique_ptr<LogoPanel> logoPanel;
-  std::unique_ptr<ArpeggiatorPanel> arpeggiatorPanel;
+  std::unique_ptr<DualArpeggiatorPanel> arpeggiatorPanel;
   std::unique_ptr<KeyboardPanel> keyboardPanel;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordArperAudioProcessorEditor)

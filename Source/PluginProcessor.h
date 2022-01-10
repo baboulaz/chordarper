@@ -23,6 +23,7 @@
 #include "music-utils/Scale.h"
 
 #define PARAM_SETNAME "ChordArperParams"
+
 #define PARAM_SCALES_ROOT_NOTE "rootNote"
 #define PARAM_SCALES_MODE "mode"
 #define PARAM_SCALES_FILTER_NOTES "filterNotes"
@@ -33,12 +34,24 @@
 #define PARAM_CHORDS_OCTAVE_UP "chordsOctaveUp"
 #define PARAM_CHORDS_OCTAVE_DOWN "chordsOctaveDown"
 
-#define PARAM_ARPEGGIATOR_ENABLE "enableArpeggiator"
-#define PARAM_ARPEGGIATOR_SPEED "arpeggiatorSpeed"
+#define PARAM_ARPEGGIATOR_1_ENABLE "arpeggiator_1_enable"
+#define PARAM_ARPEGGIATOR_1_SPEED "arpeggiator_1_Speed"
+#define PARAM_ARPEGGIATOR_1_DIRECTION "arpeggiator_1_Direction"
+#define PARAM_ARPEGGIATOR_1_TRANSPOSE "arpeggiator_1_Transpose"
+#define PARAM_ARPEGGIATOR_1_STEPS_ENABLE "arpeggiator_1_StepsEnable"
+#define PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS "arpeggiator_1_Steps"
+#define PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE "arpeggiator_1_Velocity"
+#define PARAM_ARPEGGIATOR_2_ENABLE "arpeggiator_2_enable"
+#define PARAM_ARPEGGIATOR_2_SPEED "arpeggiator_2_Speed"
+#define PARAM_ARPEGGIATOR_2_DIRECTION "arpeggiator_2_Direction"
+#define PARAM_ARPEGGIATOR_2_TRANSPOSE "arpeggiator_2_Transpose"
+#define PARAM_ARPEGGIATOR_2_STEPS_ENABLE "arpeggiator_2_StepsEnable"
+#define PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS "arpeggiator_2_Steps"
+#define PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE "arpeggiator_2_Velocity"
 
 enum ArpeggiatorSpeed
 {
-  Speed_1_1 = 0,
+  Speed_1_1 = 1,
   Speed_1_2,
   Speed_1_4,
   Speed_1_8,
@@ -47,6 +60,26 @@ enum ArpeggiatorSpeed
   Speed_1_16T,
   Speed_1_32,
   Speed_1_32T
+};
+
+enum ArpeggiatorDirection
+{
+  UP = 1,
+  DOWN,
+  UP_DOWN,
+  RANDOM,
+  PATTERN
+};
+
+struct ArpeggiatorSettings
+{
+  bool enable{false};
+  ArpeggiatorSpeed speed{ArpeggiatorSpeed::Speed_1_8};
+  ArpeggiatorDirection direction{ArpeggiatorDirection::UP};
+  int transpose{0};
+  bool enableSteps{false};
+  int numberOfSteps{0};
+  bool enableVelocity{false};
 };
 
 struct ChainSettings
@@ -59,8 +92,8 @@ struct ChainSettings
   int chordsInversion{0};
   bool chordsOctaveUp{false};
   bool chordsOctaveDown{false};
-  bool enableArpeggiator{false};
-  ArpeggiatorSpeed arpeggiatorSpeed{ArpeggiatorSpeed::Speed_1_8};
+  ArpeggiatorSettings arpegiator1;
+  ArpeggiatorSettings arpegiator2;
 };
 
 //==============================================================================

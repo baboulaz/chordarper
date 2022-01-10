@@ -45,6 +45,8 @@ target_sources(ChordArper
         Source/music-utils/Chord.cpp Source/music-utils/Chord.h
         Source/music-utils/Scale.cpp Source/music-utils/Scale.h
 
+        Source/ArpeggiatorPatternEditor.cpp Source/ArpeggiatorPatternEditor.h
+        Source/DualArpeggiatorPanel.cpp Source/DualArpeggiatorPanel.h
         Source/ArpeggiatorPanel.cpp Source/ArpeggiatorPanel.h
         Source/ChordPanel.cpp Source/ChordPanel.h
         Source/GridItemPanel.cpp Source/GridItemPanel.h
