@@ -7,7 +7,7 @@
 */
 
 #pragma once
-
+#include <string>
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_audio_formats/juce_audio_formats.h>
@@ -41,6 +41,8 @@
 #define PARAM_ARPEGGIATOR_1_STEPS_ENABLE "arpeggiator_1_StepsEnable"
 #define PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS "arpeggiator_1_Steps"
 #define PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE "arpeggiator_1_Velocity"
+#define PARAM_ARPEGGIATOR_1_VELOCITY_VALUES "arpeggiator_1_Velocity_Values"
+
 #define PARAM_ARPEGGIATOR_2_ENABLE "arpeggiator_2_enable"
 #define PARAM_ARPEGGIATOR_2_SPEED "arpeggiator_2_Speed"
 #define PARAM_ARPEGGIATOR_2_DIRECTION "arpeggiator_2_Direction"
@@ -48,6 +50,7 @@
 #define PARAM_ARPEGGIATOR_2_STEPS_ENABLE "arpeggiator_2_StepsEnable"
 #define PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS "arpeggiator_2_Steps"
 #define PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE "arpeggiator_2_Velocity"
+#define PARAM_ARPEGGIATOR_2_VELOCITY_VALUES "arpeggiator_2_Velocity_Values"
 
 enum ArpeggiatorSpeed
 {
@@ -71,6 +74,18 @@ enum ArpeggiatorDirection
   PATTERN
 };
 
+struct ArpeggiatorPatternNote
+{
+  int startPosition;
+  int endPosition;
+};
+
+
+struct ArpeggiatorPattern
+{
+  std::vector<ArpeggiatorPatternNote> lines[5];
+};
+
 struct ArpeggiatorSettings
 {
   bool enable{false};
@@ -80,6 +95,8 @@ struct ArpeggiatorSettings
   bool enableSteps{false};
   int numberOfSteps{0};
   bool enableVelocity{false};
+  int velocities[16]{65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65};
+  ArpeggiatorPattern pattern;
 };
 
 struct ChainSettings

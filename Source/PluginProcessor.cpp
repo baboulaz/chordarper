@@ -187,7 +187,7 @@ void ChordArperAudioProcessor::arpeggiator(juce::MidiBuffer &midiMessages, Chain
     if (chainSettings.arpegiator1.enable)
     {
     }
-    
+
     if (chainSettings.arpegiator2.enable)
     {
     }
@@ -236,7 +236,7 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
     settings.rootNote = static_cast<ScaleRootNote>(mState.getRawParameterValue(PARAM_SCALES_ROOT_NOTE)->load());
     settings.mode = static_cast<ScaleMode>(mState.getRawParameterValue(PARAM_SCALES_MODE)->load());
     settings.filterNotes = mState.getRawParameterValue(PARAM_SCALES_FILTER_NOTES)->load() > 0.5f;
-  
+
     settings.enableChords = mState.getRawParameterValue(PARAM_CHORDS_ENABLE)->load() > 0.5f;
     settings.chordsNotesNumber = mState.getRawParameterValue(PARAM_CHORDS_NOTES_NUMBER)->load();
     settings.chordsInversion = mState.getRawParameterValue(PARAM_CHORDS_INVERSION)->load();
@@ -250,6 +250,14 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
     settings.arpegiator1.enableSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_STEPS_ENABLE)->load() > 0.5f;
     settings.arpegiator1.numberOfSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS)->load();
     settings.arpegiator1.enableVelocity = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE)->load() > 0.5f;
+    juce::ValueTree values = mState.state.getChildWithName(PARAM_ARPEGGIATOR_1_VELOCITY_VALUES);
+    if (values.getNumChildren() == 16)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            settings.arpegiator1.velocities[i] = std::stoi(values.getChild(i).getProperty("velocity").toString().toStdString());
+        }
+    }
 
     settings.arpegiator2.enable = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_ENABLE)->load() > 0.5f;
     settings.arpegiator2.speed = static_cast<ArpeggiatorSpeed>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_SPEED)->load());
@@ -258,7 +266,14 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
     settings.arpegiator2.enableSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_STEPS_ENABLE)->load() > 0.5f;
     settings.arpegiator2.numberOfSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS)->load();
     settings.arpegiator2.enableVelocity = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE)->load() > 0.5f;
-
+    juce::ValueTree values2 = mState.state.getChildWithName(PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
+    if (values2.getNumChildren() == 16)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            settings.arpegiator1.velocities[i] = std::stoi(values2.getChild(i).getProperty("velocity").toString().toStdString());
+        }
+    }
     return settings;
 }
 
@@ -282,14 +297,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout ChordArperAudioProcessor::ge
     parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_1_TRANSPOSE, "Arpeggiator 1 Transpose", -3, 3, 0));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_1_STEPS_ENABLE, "Arpeggiator 1 Enable steps", false));
     parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS, "Arpeggiator 1  Number of Steps", 1, 16, 1));
-        parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE, "Arpeggiator 1 Enable velocity", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE, "Arpeggiator 1 Enable velocity", false));
+
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_ENABLE, "Activate arpeggiator 2", false));
     parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_2_SPEED, "Arpeggiator 2 Speed", juce::StringArray({"1/1", "1/2", "1/4", "1/8", "1/8T", "1/16", "1/16T", "1/32", "1/32T"}), 3));
     parameterLayout.add(std::make_unique<juce::AudioParameterChoice>(PARAM_ARPEGGIATOR_2_DIRECTION, "Arpeggiator 2 Direction", juce::StringArray({"UP", "DOWN", "UP_DOWN", "RANDOM", "PATTERN"}), 0));
     parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_2_TRANSPOSE, "Arpeggiator 2 Transpose", -3, 3, 0));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_STEPS_ENABLE, "Arpeggiator 2 Enable steps", false));
     parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS, "Arpeggiator 2  Number of Steps", 1, 16, 1));
-        parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE, "Arpeggiator 2 Enable velocity", false));
+    parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE, "Arpeggiator 2 Enable velocity", false));
+
 
     return parameterLayout;
 }

@@ -87,20 +87,73 @@ void ArpeggiatorPatternEditor::paintVelocity(juce::Graphics &g)
          You should replace everything in this method with your own
          drawing code..
       */
-    int width = getLocalBounds().getWidth() - 20;
     int y = getLocalBounds().getHeight() - 50;
-    int stepWidth = width / 16;
 
     g.setColour(juce::Colours::white);
     g.drawText("V", juce::Rectangle(0, y, 20, 50).reduced(1), juce::Justification::centred, true);
     g.setColour(juce::Colours::green);
 
+    ArpeggiatorSettings settings = arpeggiatorNumber == 1 ? audioProcessor.getChainSettings().arpegiator1 : audioProcessor.getChainSettings().arpegiator2;
     for (int i = 0; i < 16; i++)
     {
-        juce::Rectangle velRect = juce::Rectangle(20 + stepWidth * i, y, stepWidth, 50).reduced(1);
+        int velocity = settings.velocities[i];
+
+        juce::Rectangle<int> velRect = getVelocityRectangle(i);
+
+        g.setColour(juce::Colours::green);
         g.drawRect(velRect);
-        g.fillRect(velRect.removeFromBottom(velRect.getHeight()/2));
+
+        juce::Rectangle<int> velRectAmount = velRect;
+        g.fillRect(velRectAmount.removeFromBottom(velRectAmount.getHeight() * (velocity / 127.0f)));
+
+        g.setColour(juce::Colours::white);
+        g.drawText(std::to_string(velocity), velRect, juce::Justification::centred, true);
     }
+}
+
+void ArpeggiatorPatternEditor::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel)
+{
+    juce::ValueTree values = audioProcessor.getState().state.getChildWithName(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_VELOCITY_VALUES : PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
+    if (!values.isValid() || values.getNumChildren() != 16)
+    {
+        juce::ValueTree newValues(juce::Identifier(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_VELOCITY_VALUES : PARAM_ARPEGGIATOR_2_VELOCITY_VALUES));
+        for (int i = 0; i < 16; i++)
+        {
+            juce::ValueTree vel(juce::Identifier("velocity"));
+            vel.setProperty("velocity", 65, nullptr);
+            newValues.addChild(vel, -1, nullptr);
+        }
+        audioProcessor.getState().state.addChild(newValues, -1, nullptr);
+    }
+
+    juce::ValueTree valuesProcessor = audioProcessor.getState().state.getChildWithName(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_VELOCITY_VALUES : PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
+
+    for (int i = 0; i < 16; i++)
+    {
+        juce::Rectangle<int> velRect = getVelocityRectangle(i);
+        if (velRect.contains(event.getPosition()))
+        {
+            int val = valuesProcessor.getChild(i).getProperty("velocity");
+            int newVal = val + (wheel.deltaY > 0 ? 1 : -1);
+            if (newVal < 0)
+                newVal = 0;
+            if (newVal > 127)
+                newVal = 127;
+            valuesProcessor.getChild(i).setProperty("velocity", newVal, nullptr);
+            repaint();
+        }
+    }
+
+    std::cout << "x=" + std::to_string(event.x);
+    std::cout << "y=" + std::to_string(event.y) + "\n";
+}
+
+juce::Rectangle<int> ArpeggiatorPatternEditor::getVelocityRectangle(int number)
+{
+    int width = getLocalBounds().getWidth() - 20;
+    int y = getLocalBounds().getHeight() - 50;
+    int stepWidth = width / 16;
+    return juce::Rectangle(20 + stepWidth * number, y, stepWidth, 50).reduced(1);
 }
 
 void ArpeggiatorPatternEditor::resized()

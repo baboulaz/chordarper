@@ -31,18 +31,20 @@
 class ArpeggiatorPatternEditor : public juce::Component
 {
 public:
-    ArpeggiatorPatternEditor(ChordArperAudioProcessor &p, int arpeggiatorNumber);
-    ~ArpeggiatorPatternEditor() override;
+  ArpeggiatorPatternEditor(ChordArperAudioProcessor &p, int arpeggiatorNumber);
+  ~ArpeggiatorPatternEditor() override;
 
-    void paint(juce::Graphics &) override;
-    void paintSteps(juce::Graphics &g);
-    void paintPattern(juce::Graphics &g);
-    void paintVelocity(juce::Graphics &g);
-    void resized() override;
+  void paint(juce::Graphics &) override;
+  void paintSteps(juce::Graphics &g);
+  void paintPattern(juce::Graphics &g);
+  void paintVelocity(juce::Graphics &g);
+  void resized() override;
+  void mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel) override;
+  juce::Rectangle<int> getVelocityRectangle(int number);
 
 private:
-    ChordArperAudioProcessor &audioProcessor;
-    int arpeggiatorNumber;
+  ChordArperAudioProcessor &audioProcessor;
+  int arpeggiatorNumber;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArpeggiatorPatternEditor)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArpeggiatorPatternEditor)
 };
