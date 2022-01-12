@@ -40,11 +40,19 @@ public:
   void paintVelocity(juce::Graphics &g);
   void resized() override;
   void mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel) override;
-  juce::Rectangle<int> getVelocityRectangle(int number);
+  void mouseUp(const juce::MouseEvent &event) override;
+  void mouseMove(const juce::MouseEvent &event) override;
 
 private:
   ChordArperAudioProcessor &audioProcessor;
   int arpeggiatorNumber;
+  juce::Rectangle<int> getVelocityRectangle(int number);
+  juce::Rectangle<int> getStepRectangle(int number);
+  juce::Rectangle<int> getPatternRectangle(int number,int line);
+
+  int stepOver = -1;
+  int patternLineOver = -1;
+  int patternOver = -1;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArpeggiatorPatternEditor)
 };

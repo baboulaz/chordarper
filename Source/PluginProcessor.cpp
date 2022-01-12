@@ -14,6 +14,7 @@ using namespace std;
 //==============================================================================
 ChordArperAudioProcessor::ChordArperAudioProcessor()
 {
+    initTreeValueArrays();
 }
 
 ChordArperAudioProcessor::~ChordArperAudioProcessor()
@@ -227,6 +228,34 @@ void ChordArperAudioProcessor::setStateInformation(const void *data, int sizeInB
             mState.state = tree;
         }
     }
+    initTreeValueArrays();
+}
+
+void ChordArperAudioProcessor::initTreeValueArrays()
+{
+    if (!getState().state.getChildWithName(PARAM_ARPEGGIATOR_1_VELOCITY_VALUES).isValid())
+    {
+        juce::ValueTree newValues(PARAM_ARPEGGIATOR_1_VELOCITY_VALUES);
+        for (int i = 0; i < 16; i++)
+        {
+            juce::ValueTree vel("velocity");
+            vel.setProperty("value", 65, nullptr);
+            newValues.addChild(vel, -1, nullptr);
+        }
+        getState().state.addChild(newValues, -1, nullptr);
+    }
+
+    if (!getState().state.getChildWithName(PARAM_ARPEGGIATOR_2_VELOCITY_VALUES).isValid())
+    {
+        juce::ValueTree newValues(PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
+        for (int i = 0; i < 16; i++)
+        {
+            juce::ValueTree vel("velocity");
+            vel.setProperty("value", 65, nullptr);
+            newValues.addChild(vel, -1, nullptr);
+        }
+        getState().state.addChild(newValues, -1, nullptr);
+    }
 }
 
 ChainSettings ChordArperAudioProcessor::getChainSettings()
@@ -250,12 +279,13 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
     settings.arpegiator1.enableSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_STEPS_ENABLE)->load() > 0.5f;
     settings.arpegiator1.numberOfSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS)->load();
     settings.arpegiator1.enableVelocity = mState.getRawParameterValue(PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE)->load() > 0.5f;
+
     juce::ValueTree values = mState.state.getChildWithName(PARAM_ARPEGGIATOR_1_VELOCITY_VALUES);
     if (values.getNumChildren() == 16)
     {
         for (int i = 0; i < 16; i++)
         {
-            settings.arpegiator1.velocities[i] = std::stoi(values.getChild(i).getProperty("velocity").toString().toStdString());
+            settings.arpegiator1.velocities[i] = std::stoi(values.getChild(i).getProperty("value").toString().toStdString());
         }
     }
 
@@ -266,12 +296,13 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
     settings.arpegiator2.enableSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_STEPS_ENABLE)->load() > 0.5f;
     settings.arpegiator2.numberOfSteps = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS)->load();
     settings.arpegiator2.enableVelocity = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE)->load() > 0.5f;
+
     juce::ValueTree values2 = mState.state.getChildWithName(PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
     if (values2.getNumChildren() == 16)
     {
         for (int i = 0; i < 16; i++)
         {
-            settings.arpegiator1.velocities[i] = std::stoi(values2.getChild(i).getProperty("velocity").toString().toStdString());
+            settings.arpegiator2.velocities[i] = std::stoi(values2.getChild(i).getProperty("value").toString().toStdString());
         }
     }
     return settings;
@@ -306,7 +337,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout ChordArperAudioProcessor::ge
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_STEPS_ENABLE, "Arpeggiator 2 Enable steps", false));
     parameterLayout.add(std::make_unique<juce::AudioParameterInt>(PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS, "Arpeggiator 2  Number of Steps", 1, 16, 1));
     parameterLayout.add(std::make_unique<juce::AudioParameterBool>(PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE, "Arpeggiator 2 Enable velocity", false));
-
 
     return parameterLayout;
 }

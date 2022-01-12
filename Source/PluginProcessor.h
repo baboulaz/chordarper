@@ -80,7 +80,6 @@ struct ArpeggiatorPatternNote
   int endPosition;
 };
 
-
 struct ArpeggiatorPattern
 {
   std::vector<ArpeggiatorPatternNote> lines[5];
@@ -95,7 +94,7 @@ struct ArpeggiatorSettings
   bool enableSteps{false};
   int numberOfSteps{0};
   bool enableVelocity{false};
-  int velocities[16]{65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65};
+  int velocities[16]{65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65};
   ArpeggiatorPattern pattern;
 };
 
@@ -166,6 +165,7 @@ private:
 
   void scalesAndChords(int numSamples, juce::MidiBuffer &midi, ChainSettings &chainSettings);
   void arpeggiator(juce::MidiBuffer &midiMessages, ChainSettings chainSettings);
+  void initTreeValueArrays();
 
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordArperAudioProcessor)

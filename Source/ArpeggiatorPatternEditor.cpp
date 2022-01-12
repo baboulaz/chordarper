@@ -48,14 +48,31 @@ void ArpeggiatorPatternEditor::paintSteps(juce::Graphics &g)
     g.setColour(juce::Colours::white);
     g.drawText("S", juce::Rectangle(0, 0, 20, 15).reduced(1), juce::Justification::centred, true);
 
+    ArpeggiatorSettings settings = arpeggiatorNumber == 1 ? audioProcessor.getChainSettings().arpegiator1 : audioProcessor.getChainSettings().arpegiator2;
+
     for (int i = 0; i < 16; i++)
     {
         if (i > 0 && i % 4 == 0)
         {
             g.drawVerticalLine(20 + stepWidth * i, 0, getLocalBounds().getHeight());
         }
-        juce::Rectangle stepRect = juce::Rectangle(20 + stepWidth * i, 0, stepWidth, 15).reduced(1);
-        g.setColour(juce::Colours::green);
+
+        if (stepOver == i)
+        {
+            g.setColour(juce::Colours::lightgreen);
+        }
+        else
+        {
+            if (i < settings.numberOfSteps)
+            {
+                g.setColour(juce::Colours::green);
+            }
+            else
+            {
+                g.setColour(juce::Colours::darkgreen);
+            }
+        }
+        juce::Rectangle stepRect = getStepRectangle(i);
         g.fillRect(stepRect);
 
         g.setColour(juce::Colours::white);
@@ -68,14 +85,28 @@ void ArpeggiatorPatternEditor::paintPattern(juce::Graphics &g)
     int width = getLocalBounds().getWidth() - 20;
     int stepWidth = width / 16;
     int stepHeight = 15;
-    g.setColour(juce::Colours::green);
-    for (int i = 0; i < 16; i++)
+    ArpeggiatorSettings settings = arpeggiatorNumber == 1 ? audioProcessor.getChainSettings().arpegiator1 : audioProcessor.getChainSettings().arpegiator2;
+    for (int j = 0; j < 5; j++)
     {
-        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30, stepWidth, stepHeight).reduced(1));
-        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + stepHeight, stepWidth, stepHeight).reduced(1));
-        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + 2 * stepHeight, stepWidth, stepHeight).reduced(1));
-        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + 3 * stepHeight, stepWidth, stepHeight).reduced(1));
-        g.fillRect(juce::Rectangle(20 + stepWidth * i, 30 + 4 * stepHeight, stepWidth, stepHeight).reduced(1));
+        for (int i = 0; i < 16; i++)
+        {
+            if (patternLineOver == j && patternOver == i)
+            {
+                g.setColour(juce::Colours::lightgreen);
+            }
+            else
+            {
+                if (i < settings.numberOfSteps)
+                {
+                    g.setColour(juce::Colours::green);
+                }
+                else
+                {
+                    g.setColour(juce::Colours::darkgreen);
+                }
+            }
+            g.fillRect(getPatternRectangle(i, j));
+        }
     }
 }
 
@@ -100,7 +131,14 @@ void ArpeggiatorPatternEditor::paintVelocity(juce::Graphics &g)
 
         juce::Rectangle<int> velRect = getVelocityRectangle(i);
 
-        g.setColour(juce::Colours::green);
+        if (i < settings.numberOfSteps)
+        {
+            g.setColour(juce::Colours::green);
+        }
+        else
+        {
+            g.setColour(juce::Colours::darkgreen);
+        }
         g.drawRect(velRect);
 
         juce::Rectangle<int> velRectAmount = velRect;
@@ -113,33 +151,19 @@ void ArpeggiatorPatternEditor::paintVelocity(juce::Graphics &g)
 
 void ArpeggiatorPatternEditor::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel)
 {
-    juce::ValueTree values = audioProcessor.getState().state.getChildWithName(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_VELOCITY_VALUES : PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
-    if (!values.isValid() || values.getNumChildren() != 16)
-    {
-        juce::ValueTree newValues(juce::Identifier(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_VELOCITY_VALUES : PARAM_ARPEGGIATOR_2_VELOCITY_VALUES));
-        for (int i = 0; i < 16; i++)
-        {
-            juce::ValueTree vel(juce::Identifier("velocity"));
-            vel.setProperty("velocity", 65, nullptr);
-            newValues.addChild(vel, -1, nullptr);
-        }
-        audioProcessor.getState().state.addChild(newValues, -1, nullptr);
-    }
-
     juce::ValueTree valuesProcessor = audioProcessor.getState().state.getChildWithName(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_VELOCITY_VALUES : PARAM_ARPEGGIATOR_2_VELOCITY_VALUES);
-
     for (int i = 0; i < 16; i++)
     {
         juce::Rectangle<int> velRect = getVelocityRectangle(i);
         if (velRect.contains(event.getPosition()))
         {
-            int val = valuesProcessor.getChild(i).getProperty("velocity");
+            int val = valuesProcessor.getChild(i).getProperty("value");
             int newVal = val + (wheel.deltaY > 0 ? 1 : -1);
             if (newVal < 0)
                 newVal = 0;
             if (newVal > 127)
                 newVal = 127;
-            valuesProcessor.getChild(i).setProperty("velocity", newVal, nullptr);
+            valuesProcessor.getChild(i).setProperty("value", newVal, nullptr);
             repaint();
         }
     }
@@ -148,12 +172,84 @@ void ArpeggiatorPatternEditor::mouseWheelMove(const juce::MouseEvent &event, con
     std::cout << "y=" + std::to_string(event.y) + "\n";
 }
 
+void ArpeggiatorPatternEditor::mouseUp(const juce::MouseEvent &event)
+{
+    for (int i = 0; i < 16; i++)
+    {
+        juce::Rectangle<int> stepRect = getStepRectangle(i);
+        if (stepRect.contains(event.getPosition()))
+        {
+            juce::RangedAudioParameter *p = audioProcessor.getState().getParameter(arpeggiatorNumber == 1 ? PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS : PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS);
+            p->setValueNotifyingHost(p->convertTo0to1(i + 1));
+            repaint();
+        }
+    }
+}
+
+void ArpeggiatorPatternEditor::mouseMove(const juce::MouseEvent &event)
+{
+    bool isOver = false;
+    for (int i = 0; i < 16; i++)
+    {
+        juce::Rectangle<int> stepRect = getStepRectangle(i);
+        if (stepRect.contains(event.getPosition()))
+        {
+            isOver = true;
+            stepOver = i;
+            repaint();
+        }
+    }
+    if (!isOver)
+    {
+        stepOver = -1;
+        repaint();
+    }
+
+    bool isPatternOver = false;
+    for (int j = 0; j < 5; j++)
+    {
+        for (int i = 0; i < 16; i++)
+        {
+            juce::Rectangle<int> stepRect = getPatternRectangle(i, j);
+            if (stepRect.contains(event.getPosition()))
+            {
+                isPatternOver = true;
+                patternLineOver = j;
+                patternOver = i;
+                repaint();
+            }
+        }
+    }
+    if (!isPatternOver)
+    {
+        patternLineOver = -1;
+        patternOver = -1;
+        repaint();
+    }
+}
+
 juce::Rectangle<int> ArpeggiatorPatternEditor::getVelocityRectangle(int number)
 {
     int width = getLocalBounds().getWidth() - 20;
     int y = getLocalBounds().getHeight() - 50;
     int stepWidth = width / 16;
     return juce::Rectangle(20 + stepWidth * number, y, stepWidth, 50).reduced(1);
+}
+
+juce::Rectangle<int> ArpeggiatorPatternEditor::getStepRectangle(int number)
+{
+    int width = getLocalBounds().getWidth() - 20;
+    int stepWidth = width / 16;
+    return juce::Rectangle(20 + stepWidth * number, 0, stepWidth, 15).reduced(1);
+}
+
+juce::Rectangle<int> ArpeggiatorPatternEditor::getPatternRectangle(int number, int line)
+{
+    int width = getLocalBounds().getWidth() - 20;
+    int stepWidth = width / 16;
+    int stepHeight = 15;
+
+    return juce::Rectangle(20 + stepWidth * number, 30 + line * stepHeight, stepWidth, stepHeight).reduced(1);
 }
 
 void ArpeggiatorPatternEditor::resized()
