@@ -40,6 +40,7 @@
 #define PARAM_ARPEGGIATOR_1_TRANSPOSE "arpeggiator_1_Transpose"
 #define PARAM_ARPEGGIATOR_1_STEPS_ENABLE "arpeggiator_1_StepsEnable"
 #define PARAM_ARPEGGIATOR_1_NUMBER_OF_STEPS "arpeggiator_1_Steps"
+#define PARAM_ARPEGGIATOR_1_PATTERN "arpeggiator_1_Pattern"
 #define PARAM_ARPEGGIATOR_1_VELOCITY_ENABLE "arpeggiator_1_Velocity"
 #define PARAM_ARPEGGIATOR_1_VELOCITY_VALUES "arpeggiator_1_Velocity_Values"
 
@@ -49,6 +50,7 @@
 #define PARAM_ARPEGGIATOR_2_TRANSPOSE "arpeggiator_2_Transpose"
 #define PARAM_ARPEGGIATOR_2_STEPS_ENABLE "arpeggiator_2_StepsEnable"
 #define PARAM_ARPEGGIATOR_2_NUMBER_OF_STEPS "arpeggiator_2_Steps"
+#define PARAM_ARPEGGIATOR_2_PATTERN "arpeggiator_2_Pattern"
 #define PARAM_ARPEGGIATOR_2_VELOCITY_ENABLE "arpeggiator_2_Velocity"
 #define PARAM_ARPEGGIATOR_2_VELOCITY_VALUES "arpeggiator_2_Velocity_Values"
 

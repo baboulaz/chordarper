@@ -256,6 +256,27 @@ void ChordArperAudioProcessor::initTreeValueArrays()
         }
         getState().state.addChild(newValues, -1, nullptr);
     }
+
+    if (!getState().state.getChildWithName(PARAM_ARPEGGIATOR_1_PATTERN).isValid())
+    {
+        juce::ValueTree newValues(PARAM_ARPEGGIATOR_1_PATTERN);
+        for (int i = 0; i < 5; i++)
+        {
+            juce::ValueTree vel(juce::Identifier("line"+std::to_string(i)));
+            newValues.addChild(vel, -1, nullptr);
+        }
+        getState().state.addChild(newValues, -1, nullptr);
+    }
+    if (!getState().state.getChildWithName(PARAM_ARPEGGIATOR_2_PATTERN).isValid())
+    {
+        juce::ValueTree newValues(PARAM_ARPEGGIATOR_2_PATTERN);
+        for (int i = 0; i < 5; i++)
+        {
+            juce::ValueTree vel(juce::Identifier("line"+std::to_string(i)));
+            newValues.addChild(vel, -1, nullptr);
+        }
+        getState().state.addChild(newValues, -1, nullptr);
+    }
 }
 
 ChainSettings ChordArperAudioProcessor::getChainSettings()
@@ -289,6 +310,27 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
         }
     }
 
+    juce::ValueTree patternValue = mState.state.getChildWithName(PARAM_ARPEGGIATOR_1_PATTERN);
+    if (patternValue.isValid())
+    {
+        ArpeggiatorPattern pattern;
+        for (int i = 0; i < 5; i++)
+        {
+            pattern.lines[i] = std::vector<ArpeggiatorPatternNote>();
+            juce::ValueTree lineValue = patternValue.getChildWithName(juce::Identifier("line" + std::to_string(i)));
+
+            for (int j = 0; j < lineValue.getNumChildren(); j++)
+            {
+                juce::ValueTree noteValue = lineValue.getChild(j);
+                ArpeggiatorPatternNote note;
+                note.startPosition = std::stoi(noteValue.getProperty("startPosition").toString().toStdString());
+                note.endPosition = std::stoi(noteValue.getProperty("endPosition").toString().toStdString());
+                pattern.lines[i].push_back(note);
+            }
+        }
+        settings.arpegiator1.pattern = pattern;
+    }
+
     settings.arpegiator2.enable = mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_ENABLE)->load() > 0.5f;
     settings.arpegiator2.speed = static_cast<ArpeggiatorSpeed>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_SPEED)->load());
     settings.arpegiator2.direction = static_cast<ArpeggiatorDirection>(mState.getRawParameterValue(PARAM_ARPEGGIATOR_2_DIRECTION)->load());
@@ -305,6 +347,28 @@ ChainSettings ChordArperAudioProcessor::getChainSettings()
             settings.arpegiator2.velocities[i] = std::stoi(values2.getChild(i).getProperty("value").toString().toStdString());
         }
     }
+
+    juce::ValueTree pattern2Value = mState.state.getChildWithName(PARAM_ARPEGGIATOR_2_PATTERN);
+    if (pattern2Value.isValid())
+    {
+        ArpeggiatorPattern pattern;
+        for (int i = 0; i < 5; i++)
+        {
+            pattern.lines[i] = std::vector<ArpeggiatorPatternNote>();
+            juce::ValueTree lineValue = pattern2Value.getChildWithName(juce::Identifier("line" + std::to_string(i)));
+
+            for (int j = 0; j < lineValue.getNumChildren(); j++)
+            {
+                juce::ValueTree noteValue = lineValue.getChild(j);
+                ArpeggiatorPatternNote note;
+                note.startPosition = std::stoi(noteValue.getProperty("startPosition").toString().toStdString());
+                note.endPosition = std::stoi(noteValue.getProperty("endPosition").toString().toStdString());
+                pattern.lines[i].push_back(note);
+            }
+        }
+        settings.arpegiator2.pattern = pattern;
+    }
+
     return settings;
 }
 

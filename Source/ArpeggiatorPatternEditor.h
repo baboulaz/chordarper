@@ -48,7 +48,8 @@ private:
   int arpeggiatorNumber;
   juce::Rectangle<int> getVelocityRectangle(int number);
   juce::Rectangle<int> getStepRectangle(int number);
-  juce::Rectangle<int> getPatternRectangle(int number,int line);
+  juce::Rectangle<int> getPatternRectangle(int number, int line);
+  bool isPatternSelected(int i, int j);
 
   int stepOver = -1;
   int patternLineOver = -1;
